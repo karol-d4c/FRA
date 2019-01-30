@@ -10,14 +10,14 @@
 #'
 #' @return ITRC S3 object with
 #' @export
-ComputeITRC <-
+ITRC <-
   function(
     data,
     signal = "signal",
     response = "response",
     sample = "sample",
     bootstrap = FALSE,
-    bootstrap.number = 1,
+    bootstrap.number = 2,
     bootstrap.sample_size = NULL,
     parallel_cores = 1,
     ...
@@ -35,20 +35,26 @@ ComputeITRC <-
         GenerateBootstrapSample(
           model = model,
           bootstrap.number = bootstrap.number,
-          bootstrap.sample_size = bootstrap.sample_size
+          bootstrap.sample_size = bootstrap.sample_size,
+          parallel_cores = parallel_cores
         )
     } else {
       model <-
         GenerateNoBootstrapSample(
-           model = model
+          model = model
         )
     }
 
-    ITRCoutput <-
-      ComputeITRC(model,
-                  no_cores)
 
-  }
+    #### TODO
+    model <-
+      ComputeBootstrapITRC(
+        model = model,
+        parallel_cores = parallel_cores)
+
+    return(model)
+
+}
 
 
 

@@ -12,15 +12,18 @@ GenerateNoBootstrapSample.ITRCModel <-
     ...
   ){
     data.table::data.table(
-        bootstrap = 1,
-        bootstrap.sample = paste(1, 1:nrow(model$data), sep = "_"),
-        sample    = model$data[[model$sample]]
-      ) ->
+      bootstrap = c(rep(x = 1, times = nrow(model$data)),
+                    rep(x = 2, times = nrow(model$data))),
+      bootstrap.sample =
+        c(paste(1,1:nrow(model$data), sep = "_"),
+          paste(2, 1:nrow(model$data), sep = "_")),
+      sample    = c(model$data[[model$sample]],model$data[[model$sample]])
+    ) ->
       model$bootstrap.samples.df
-      model$bootstrap.samples <-
-       (model$bootstrap.samples.df %>%
-          dplyr::distinct(bootstrap))[["bootstrap"]]
-      return(model)
+    model$bootstrap.samples <-
+      (model$bootstrap.samples.df %>%
+         dplyr::distinct(bootstrap))[["bootstrap"]]
+    return(model)
   }
 
 #'
@@ -50,6 +53,9 @@ GenerateBootstrapSample.ITRCModel <-
   ) {
 
     stopifnot(is.numeric(bootstrap.number))
+    if(bootstrap.number < 2){
+      bootstrap.number = 2
+    }
     stopifnot(is.numeric(parallel_cores))
 
     if(is.null(bootstrap.sample_size)){

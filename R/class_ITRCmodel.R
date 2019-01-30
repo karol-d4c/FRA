@@ -1,5 +1,11 @@
-
-
+#' Constructor of ITRCModel S3 object
+#'
+#' @param data A data.frame or data.table object with columns \code{signal}, \code{response} and \code{sample} in a wide format
+#' @param signal
+#' @param response
+#' @param sample
+#'
+#' @return ITRCModel S3 object with
 new_ITRCModel <-
   function(
     data,
@@ -37,8 +43,12 @@ new_ITRCModel <-
       stop(paste("data has not column named", sample))
     }
     model <-
-      list(data = data,
+      list(data =
+             data %>%
+             dplyr::arrange_(sample, signal) %>%
+             data.table::data.table(),
            signal = signal,
+           class  = "class",
            response = response,
            sample = sample
       )
