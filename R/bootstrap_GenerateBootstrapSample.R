@@ -3,6 +3,7 @@ GenerateNoBootstrapSample <-
   function(model){
     UseMethod("GenerateNoBootstrapSample")
   }
+
 #'
 #'
 GenerateNoBootstrapSample.ITRCModel <-
@@ -10,7 +11,7 @@ GenerateNoBootstrapSample.ITRCModel <-
     model,
     ...
   ){
-    data.frame(
+    data.table::data.table(
         bootstrap = 1,
         bootstrap.sample = paste(1, 1:nrow(model$data), sep = "_"),
         sample    = model$data[[model$sample]]
@@ -33,37 +34,68 @@ GenerateBootstrapSample <-
 
 #'
 #'
+#' @param model
+#' @param bootstrap.number
+#' @param bootstrap.sample_size
+#'
+#' @importFrom foreach %dopar%
 #'
 GenerateBootstrapSample.ITRCModel <-
   function(
     model,
+    bootstrap.number = 1,
+    bootstrap.sample_size = NULL,
+    parallel_cores = 1,
     ...
   ) {
-    # dir.create(output.path, recursive = TRUE)
-    # output.sample.path <- paste(output.path, "samples", sep = "")
-    # registerDoParallel(no_cores)
-    # data.raw.list <-
-    #   foreach::foreach(bootstrap.i = 1:bootstrap.num) %dopar% {
-    #     if(!force.recalculation &
-    #        file.exists(paste(output.sample.path, bootstrap.i, "data.rds", sep = "/"))){
-    #       data.raw <- (readRDS(paste(output.sample.path, bootstrap.i, "data.rds", sep = "/")))$data.rds
-    #       data.raw$sample <- bootstrap.i
-    #       return(data.raw)
-    #
-    #     } else #if(calculate.remaining){
-    #     {
-    #       data.raw <-
-    #         do.call(
-    #           what = fun.sample,
-    #           args = append(fun.sample.args,
-    #                         list(
-    #                           n = n,
-    #                           output.path = paste(output.sample.path, bootstrap.i, sep = "/"))))
-    #       data.raw$sample <- bootstrap.i
-    #       return(data.raw)
-    #     }
-    #   }
-    # stopImplicitCluster()
+
+    stopifnot(is.numeric(bootstrap.number))
+    stopifnot(is.numeric(parallel_cores))
+
+    if(is.null(bootstrap.sample_size)){
+      bootstrap.sample_size <-
+        GenerateDefaultBootstrapSampleSize(
+          model,
+          bootstrap.sample_size
+        )
+    }
+
+    doParallel::registerDoParallel(parallel_cores)
+    foreach::foreach(bootstrap.i = 1:bootstrap.number) %dopar% {
+
+      foreach::foreach(
+        signal_ =
+          (model$data %>%
+             dplyr::distinct_(model$signal))[[model$signal]]) %dopar% {
+               data.frame(
+                 bootstrap = bootstrap.i,
+                 bootstrap.sample = paste(bootstrap.i,
+                                          signal_,
+                                          1:bootstrap.number,
+                                          sep = "_"),
+                 sample    =
+                   sample(
+                     x =
+                       (model$data %>%
+                          dplyr::filter_(paste(model$signal, "==" , signal_)))[[model$sample]],
+                     size = bootstrap.sample_size,
+                     replace = TRUE
+                   ))
+             } %>%
+        do.call(what = rbind,
+                args = .) %>%
+        return()
+    } %>%
+      do.call(what = rbind,
+              args = .) %>%
+      data.table::data.table() ->
+      model$bootstrap.samples.df
+    doParallel::stopImplicitCluster()
+
+    model$bootstrap.samples <-
+      (model$bootstrap.samples.df %>%
+         dplyr::distinct(bootstrap))[["bootstrap"]]
 
     return(model)
 }
+
