@@ -14,6 +14,9 @@ ComputeITRC <-
                          dplyr::distinct_(model$signal))[[model$signal]],
         bootstrap.samples = model$bootstrap.samples)
 
+    if(length(compuatations.task.list) < 1){
+      stop("ITRC can be computed if number of signals is higher than 1")
+    }
 
     doParallel::registerDoParallel(parallel_cores)
     foreach::foreach(
@@ -73,15 +76,14 @@ ComputeITRC <-
             computation.task$bootstrap
 
           return(df.confusion)
-        } ->
-      df.confusion.list
+        } %>%
+      do.call(
+        what = rbind,
+        args = .
+      ) ->
+      model$confusion.table
     doParallel::registerDoParallel(parallel_cores)
 
-    do.call(
-      what = rbind,
-      args = df.confusion.list
-    ) ->
-      model$confusion.table
 
     model$confusion.table %>%
       dplyr::left_join(
@@ -103,7 +105,13 @@ ComputeITRC <-
         prob.sd = sd(counts/counts.sum)
       ) %>%
       dplyr::select_(.dots= setdiff(names(.), "counts.sum")) %>%
-      dplyr::ungroup() ->
+      dplyr::ungroup()  ->
+      model$confusion.matrix
+
+    model$confusion.matrix[1,] %>%
+      dplyr::mutate_all(.funs = function(x){0}) %>%
+      dplyr::mutate(prob = 1) %>%
+      rbind(model$confusion.matrix) ->
       model$confusion.matrix
 
     model$confusion.table %>%
@@ -146,7 +154,7 @@ ComputeITRC <-
            dplyr::summarise(prob = sum(prob)))[["prob"]]
     itrc_ %>%
       dplyr::mutate(prob = prob_)
-    } -> itrc.list %>%
+    }  %>%
       do.call(what = rbind,
               args = .) %>%
       dplyr::group_by_(
@@ -160,6 +168,22 @@ ComputeITRC <-
       dplyr::arrange_("max.signal",
                       model$signal) ->
     model$itrc
+
+    model$itrc[1,] %>%
+      dplyr::mutate_all(.funs = function(x){0}) %>%
+      dplyr::mutate(prob.mean = 1) %>%
+      rbind(model$itrc) %>%
+      dplyr::ungroup() ->
+      model$itrc
+
+    model$itrc %>%
+      dplyr::group_by_(
+        model$signal
+      ) %>%
+      dplyr::summarise(
+        itrc = max(prob.mean)
+      ) ->
+      model$itrc
 
     return(model)
   }
