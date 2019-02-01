@@ -1,32 +1,84 @@
+#' plotITRCWaves
 #'
+#' ...
+#' @param model ITRC model
+#' @inheritDotParams rescaleSignalsValues
+# #' @inheritDotParams GetPlotTheme
 #'
+#' @examples ...
 #' @export
 plotITRCWaves <-
   function(
     model,
+    plot.title_ = "Information Theoretic Response Curve",
     ...
   ){
-    force(g.basic)
-
+    # force(g.basic)
     model <-
-      GetConfusionData(model)
+      GetConfusionData(
+        model)
+
+    # model$rescale.stims <-
+    #   rescaleClassesValues.DataFrame(
+    #     data =
+    #       model$data.raw %>%
+    #       dplyr::distinct(Stim) %>%
+    #       dplyr::filter(Stim %in% stim.list.rcc) %>%
+    #       dplyr::arrange(Stim) %>%
+    #       dplyr::ungroup(),
+    #     col.to.rescale = "Stim",
+    #     col.rescaled = "logStim",
+    #     class.remove = 0,
+    #     #class.remove.rescale = 0.25,
+    #     rescale.fun = rcc.waves.logfun)
+    #
+    # virids.option_ <- "D"
+    # colors.pallete <- viridis(n = 1000,
+    #                           option = virids.option_, end = 1)
+    #
+    # model$rcc.pallete <-
+    #   GetWaveColors(
+    #     class.df =
+    #       model$rescale.stims,
+    #     class.name = "Stim",
+    #     class.values = "logStim",
+    #     colors.pallete = colors.pallete
+    #   )
+
+    x_  <- "signal_rescaled"
+    y.itrc <- "itrc"
+    group.itrc <- "type"
+    signals.rescale.df <-
+      rescaleSignalsValues.DataFrame(
+        model = model,
+        col.to.rescale = model$signal,
+        col.rescaled   = x_,
+        ...)
+
+    ggplot.data.itrc <-
+      model$confusion.waves %>%
+      dplyr::filter(signal == class) %>%
+      dplyr::left_join(
+        signals.rescale.df,
+        by = model$signal
+      ) %>%
+      dplyr::mutate(
+        type = "itrc")
+
 
     ggplot2::ggplot() +
       ggplot2::geom_point(
-        data = model$confusion.waves %>%
-          dplyr::filter(signal == class),
+        data = ggplot.data.itrc,
         mapping = ggplot2::aes_string(
-          x = "log(signal)",
-          y = "itrc")
+          x = x_,
+          y = y.itrc)
       ) +
       ggplot2::geom_line(
-        data = model$confusion.waves %>%
-          dplyr::filter(signal == class) %>%
-          dplyr::mutate(type = "itrc"),
+        data = ggplot.data.itrc,
         mapping = ggplot2::aes_string(
-          x = "log(signal)",
-          y = "itrc",
-          group = "type")
+          x = x_,
+          y = y.itrc,
+          group = group.itrc)
       ) +
       ggplot2::geom_polygon(
         data = model$confusion.waves.polygon %>%
@@ -38,7 +90,8 @@ plotITRCWaves <-
           fill = "factor(class)",
           group = "interaction(class, type)"),
         alpha = 0.5
-      )
+      ) +
+      GetPlotTheme(...)
 
 
     #

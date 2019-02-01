@@ -1,10 +1,10 @@
-#'
+#' GenerateNoBootstrapSample
 GenerateNoBootstrapSample <-
   function(model){
     UseMethod("GenerateNoBootstrapSample")
   }
 
-#'
+#' GenerateNoBootstrapSample.ITRCModel
 #'
 GenerateNoBootstrapSample.ITRCModel <-
   function(
@@ -26,8 +26,8 @@ GenerateNoBootstrapSample.ITRCModel <-
     return(model)
   }
 
-#'
-#'
+#' GenerateBootstrapSample
+#' @param model
 #'
 GenerateBootstrapSample <-
   function(model,
@@ -35,7 +35,7 @@ GenerateBootstrapSample <-
     UseMethod("GenerateBootstrapSample")
   }
 
-#'
+#' GenerateBootstrapSample.ITRCModel
 #'
 #' @param model
 #' @param bootstrap.number
