@@ -10,6 +10,7 @@
 #'
 #' @return ITRC S3 object with
 #' @export
+
 ITRC <-
   function(
     data,
@@ -48,9 +49,11 @@ ITRC <-
 
     #### TODO
     model <-
-      ComputeBootstrapITRC(
+      ComputeITRC(
         model = model,
-        parallel_cores = parallel_cores)
+        parallel_cores =
+          parallel_cores,
+        ...)
 
     return(model)
 

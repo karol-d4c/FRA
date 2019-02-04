@@ -4,60 +4,56 @@
 #' @param model ITRC model
 #' @inheritDotParams rescaleSignalsValues
 # #' @inheritDotParams GetPlotTheme
-#'
+#' @param ylimits_ TRUE FALSE or vector of minimum and maximum of y axes
 #' @examples ...
 #' @export
 plotITRCWaves <-
   function(
     model,
     plot.title_ = "Information Theoretic Response Curve",
+    xlab_ = "States number",
+    ylab_ = "Signal levels",
+    title_ = "",
+    fill.guide_ = TRUE,
+    ylimits_ = TRUE,
     ...
   ){
-    # force(g.basic)
+
     model <-
-      GetConfusionData(
-        model)
+      CalculateConfusion(
+        model,
+        ...)
 
-    # model$rescale.stims <-
-    #   rescaleClassesValues.DataFrame(
-    #     data =
-    #       model$data.raw %>%
-    #       dplyr::distinct(Stim) %>%
-    #       dplyr::filter(Stim %in% stim.list.rcc) %>%
-    #       dplyr::arrange(Stim) %>%
-    #       dplyr::ungroup(),
-    #     col.to.rescale = "Stim",
-    #     col.rescaled = "logStim",
-    #     class.remove = 0,
-    #     #class.remove.rescale = 0.25,
-    #     rescale.fun = rcc.waves.logfun)
-    #
-    # virids.option_ <- "D"
-    # colors.pallete <- viridis(n = 1000,
-    #                           option = virids.option_, end = 1)
-    #
-    # model$rcc.pallete <-
-    #   GetWaveColors(
-    #     class.df =
-    #       model$rescale.stims,
-    #     class.name = "Stim",
-    #     class.values = "logStim",
-    #     colors.pallete = colors.pallete
-    #   )
-
-    x_  <- "signal_rescaled"
-    y.itrc <- "itrc"
-    group.itrc <- "type"
+    col.rescaled <- "signal_rescaled"
+    col.to.rescale <- model$signal
     signals.rescale.df <-
       rescaleSignalsValues.DataFrame(
         model = model,
         col.to.rescale = model$signal,
-        col.rescaled   = x_,
+        col.rescaled   = col.rescaled,
         ...)
 
+    print(signals.rescale.df)
+    print(as.numeric(signals.rescale.df[[col.rescaled]]))
+    colors <-
+      GetLevelColors(
+        levels = as.numeric(signals.rescale.df[[col.rescaled]]),
+        levels.names = signals.rescale.df[[model$signal]]
+      )
+
+    g.plot <-
+      ggplot2::ggplot() +
+      GetPlotTheme(...) +
+      ggplot2::ggtitle(title_)
+
+
+
+    x.itrc  <- "signal_rescaled"
+    y.itrc <- "itrc"
+    group.itrc <- "type"
     ggplot.data.itrc <-
       model$confusion.waves %>%
-      dplyr::filter(signal == class) %>%
+      dplyr::filter_(paste(model$signal, "==", model$class)) %>%
       dplyr::left_join(
         signals.rescale.df,
         by = model$signal
@@ -65,84 +61,100 @@ plotITRCWaves <-
       dplyr::mutate(
         type = "itrc")
 
-
-    ggplot2::ggplot() +
+    g.plot +
       ggplot2::geom_point(
         data = ggplot.data.itrc,
         mapping = ggplot2::aes_string(
-          x = x_,
+          x = x.itrc,
           y = y.itrc)
       ) +
       ggplot2::geom_line(
         data = ggplot.data.itrc,
         mapping = ggplot2::aes_string(
-          x = x_,
+          x = x.itrc,
           y = y.itrc,
           group = group.itrc)
-      ) +
+      ) ->
+      g.plot
+
+    x.waves  <- "signal_rescaled"
+    y.waves <- "position"
+    fill.waves <- paste("factor(", model$class, ")")
+    group.waves <- paste("interaction(", model$class, ", type)")
+    ggplot.data.waves <-
+      model$confusion.waves.polygon %>%
+      dplyr::left_join(
+        signals.rescale.df,
+        by = model$signal
+      ) %>%
+      dplyr::mutate(
+        type = "itrc")
+
+    g.plot +
       ggplot2::geom_polygon(
-        data = model$confusion.waves.polygon %>%
-          #dplyr::filter(class %in% c(0, 1e-02,  3e-02, 1e-01)) %>%
-          dplyr::mutate(type = "itrc"),,
+        data = ggplot.data.waves,
         mapping = ggplot2::aes_string(
-          x = "log(signal)",
-          y = "position",
-          fill = "factor(class)",
-          group = "interaction(class, type)"),
+          x = x.waves,
+          y = y.waves,
+          fill = fill.waves,
+          group = group.waves),
         alpha = 0.5
-      ) +
-      GetPlotTheme(...)
+      ) ->
+      g.plot
+
+    g.plot +
+      ggplot2::scale_fill_manual(
+        name = xlab_,
+        values = colors,
+        labels = signals.rescale.df[[model$signal]]
+      ) ->
+      g.plot
+
+    if(!is.factor(signals.rescale.df[[col.rescaled]])){
+      g.plot +
+        ggplot2::scale_x_continuous(
+        name = xlab_,
+        breaks = signals.rescale.df[[col.rescaled]],
+        labels = signals.rescale.df[[col.to.rescale]]
+      )  ->
+      g.plot
+    } else {
+      g.plot +
+        ggplot2::scale_x_discrete(
+          name = xlab_)  ->
+        g.plot
+    }
 
 
-    #
-    #     g <-
-    #       g.basic +
-    #       geom_polygon(
-    #         data = df.confusion.wave.polygon,
-    #         mapping = aes_string(
-    #           x = rcc.waves.x_,
-    #           y = "res",
-    #           fill = "factor(Stim.class)"),
-    #         alpha = rcc.waves.alpha_
-    #       ) +
-    #       geom_line(
-    #         data = df.confusion.wave %>%
-    #           dplyr::filter(Stim == Stim.class),
-    #         mapping = aes_string(x = rcc.waves.x_,
-    #                              y = "value",
-    #                              group = "type"),
-    #         size = graphics.line.size
-    #       ) +
-    #       ggtitle(title_) +
-    #       do.call(graphics.args$theme.fun, args = graphics.args$theme.args)
-    #     if(!is.null(rcc.polygon_pallete)){
-    #       g <-
-    #         g +
-    #         scale_fill_manual(values = rcc.polygon_pallete)
-    #     }
-    #     if(!is.null(rcc.waves.ylim_)){
-    #       if(is.null(scale_y_continuous.args)){
-    #         scale_y_continuous.args <- list()
-    #       }
-    #       scale_y_continuous.args$limits <- rcc.waves.ylim_
-    #       g <-
-    #         g +
-    #         do.call(what = scale_y_continuous,
-    #                 args = scale_y_continuous.args)
-    #     }
-    #     if(save.plot & !is.null(itrc_confusion_waves.plot.path)){
-    #       ggsave.args <- graphics.args$ggsave.args
-    #       ggsave.args$height <- 8
-    #       ggsave.args$width <- (3/4)*14
-    #       do.call(what = ggsave,
-    #               args = append(ggsave.args,
-    #                             list(
-    #                               filename = paste(itrc_confusion_waves.plot.path, "itrc_confusion_waves.pdf", sep = "/"),
-    #                               plot = g)
-    #               ))
-    #     }
-    #     if(return.plot){
-    #       return(g)
-    #     }
+      if(is.logical(ylimits_)){
+        if(ylimits_){
+          ylimits_ <- c(0, 1.2*max(ggplot.data.waves$position))
+        } else {
+          ylimits_ <- NULL
+        }
+      }
+      if(!is.null(ylimits_)){
+        if(length(ylimits_) != 2){
+          warnings("Limits of y axes should be defined as vector that consists
+                   minimal and maximal numeric value")
+          ylimits_ <- NULL
+        }
+      }
+
+      if(!is.null(ylimits_)){
+        g.plot +
+          ggplot2::scale_y_continuous(
+            name = ylab_,
+            limits = ylimits_
+          )
+      } else {
+        g.plot +
+          ggplot2::scale_y_continuous(
+            name = ylab_
+          )
+      } ->
+      g.plot
+
+
 
   }

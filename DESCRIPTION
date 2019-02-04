@@ -13,7 +13,12 @@ Imports:
     data.table,
     reshape2,
     doParallel,
-    nnet
+    nnet,
+    ggplot2,
+    ggthemes,
+    grDevices,
+    viridis,
+    gplots
 Depends:
   dplyr,
   foreach
