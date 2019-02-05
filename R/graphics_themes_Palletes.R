@@ -209,14 +209,13 @@ GetLevelColors <-
       stop("Improper colors pallete. Try default version")
     }
 
-    color.rescaling.object <-
+    color.fun <-
       GetWaveColorsRescalingObject(
       pallete.fun = pallete.fun,
       class.list = levels,
       ...)
 
-    colors <- sapply(levels,
-                             color.rescaling.object$color.fun)
+    colors <- sapply(levels, color.fun)
     names(colors) <- levels.names
     return(colors)
   }
