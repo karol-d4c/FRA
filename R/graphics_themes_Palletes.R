@@ -1,4 +1,13 @@
-#### GetWaveColors ####
+#' GetWaveColorsRescalingObject
+#'
+#' @description Internal function that specify function which returns color for signal level.
+#'
+#' @param pallete.fun function, declared as \code{function(n){ }} that returns n colors with increasing intensity
+#' @param class.list numeric vector, specify levels of color sensitivity
+#' @param colors.n numeric, number of colors in range, \code{default = 100}
+#' @param colors.min.diff numeric, minimal difference between colors ids in colors range, \code{default = 2}
+#'
+#' @return function, declared as \code{function(level) {}}, that return color for level
 GetWaveColorsRescalingObject <-
   function(
     pallete.fun = NULL,
@@ -13,7 +22,8 @@ GetWaveColorsRescalingObject <-
     class.list <- sort(class.list)
 
     if(is.null(pallete.fun)){
-      pallete.fun <- GenerateWavePalleteFunction()
+      pallete.fun <-
+        GenerateWavePalleteFunction()
     }
     class.max <- max(class.list)
     class.min <- min(class.list)
@@ -33,43 +43,14 @@ GetWaveColorsRescalingObject <-
     color.fun <- function(class_){
       pallete[round(a*class_+b)]
     }
-    return(
-      list(
-        color.fun = color.fun,
-        colors.n = colors.n,
-        a = a,
-        b = b,
-        pallete  = pallete
-      )
-    )
+    return(color.fun)
   }
 
-GetWaveColorsDataFrame <-
-  function(
-    pallete.fun = NULL,
-    class.list,
-    ...
-  ){
 
-    if(is.null(class.list)){
-      stop("No classes defined")
-    }
-    class.list <- sort(class.list)
 
-    color.rescaling.object <-
-      GetWaveColorsRescalingObject( pallete.fun = pallete.fun,
-                                    class.list = class.list,
-                                    ...)
-    colors.df <-
-      data.frame(
-        class = class.list,
-        color = sapply(class.list,
-                       color.rescaling.object$color.fun),
-        stringsAsFactors = FALSE)
-    return(colors.df)
-  }
-
-#### GetPalleteColorsList ####
+#' GetPalleteColorsList
+#' @description This function return list of internal colors palletes
+#'
 GetPalleteColorsList <-
   function(...){
     pallete.list <- list()
@@ -112,7 +93,17 @@ GetPalleteColorsList <-
     return(pallete.list)
   }
 
-#### GetPalleteColors ####
+#' GetPalleteColors
+#'
+#' @description This function return colors pallete according to internal parameters. In default return virdis pallete.
+#'
+#' @param pallete specify colors pallete; pallete can be chosen from set
+#' \code{c("virdis", "blue_red", "blue_green_red", "yellow_red", "orange", "bcgyr")} or as a vector of colors that will be
+#' passed to the function \code{GetPalleteFun} to create new pallete
+#' @param pallete.args list, arguments to pallete (for instance to virdis function)
+#'
+#' @return vector of colors pallete in RGB
+#'
 GetPalleteColors <-
   function(
    pallete = "virdis",
@@ -161,7 +152,15 @@ GetPalleteColors <-
     return(colors.list)
 }
 
-
+#' GetPalleteFun
+#'
+#' @description  These functions return functions that interpolate a set of given colors to create
+#' new color palettes (like topo.colors) and color ramps, functions that map the interval [0, 1] to colors (like grey).
+#'
+#' @param colors.range.list colors to interpolate; must be a valid argument to col2rgb().
+#'
+#' @return character vector of colors in RGB
+#'
 GetPalleteFun <-
   function(
     colors.range.list = NULL,
@@ -172,7 +171,16 @@ GetPalleteFun <-
       return()
   }
 
-
+#' GetLevelColors
+#'
+#' @description Returns colors pallete for signals defined in \code{levels}
+#'
+#' @param levels numeric vector
+#' @param levels.names character vector, names of signals
+#' @inheritDotParams GetPalleteColors
+#'
+#' @return vector of colors for signal levels
+#'
 GetLevelColors <-
   function(
     levels,

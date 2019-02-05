@@ -9,14 +9,21 @@ theme_itrc(theme.base_size = 12, theme.base_family = "sans",
   theme.margins = c(1, 1, 1, 1), legend.position = "right", ...)
 }
 \arguments{
-\item{...}{}
+\item{theme.base_size}{= 12,}
+
+\item{theme.base_family}{= "sans",}
+
+\item{theme.title_size}{= 36,}
+
+\item{theme.text_size}{= 3*theme.title_size/4,}
+
+\item{theme.margins}{= c(1,1, 1, 1),}
+
+\item{legend.position}{= "right",}
 }
 \value{
-...
+ggthemes::theme_foundation object
 }
 \description{
-theme_itrc
-}
-\examples{
-...
+This function specify theme used in the ITRC package
 }

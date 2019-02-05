@@ -4,13 +4,20 @@
 \alias{plotITRCWaves}
 \title{plotITRCWaves}
 \usage{
-plotITRCWaves(model,
-  plot.title_ = "Information Theoretic Response Curve",
-  xlab_ = "States number", ylab_ = "Signal levels", title_ = "",
+plotITRCWaves(model, title_ = "Information Theoretic Response Curve",
+  xlab_ = "States number", ylab_ = "Signal levels",
   fill.guide_ = TRUE, ylimits_ = TRUE, ...)
 }
 \arguments{
-\item{model}{ITRC model}
+\item{model}{ITRCModel object return by ITRC function}
+
+\item{title_}{character, specify title of plot, default \code{"Information Theoretic Response Curve"}}
+
+\item{xlab_}{character, label of x axes, default \code{"States number"}}
+
+\item{ylab_}{character, label of y axes and legend title, default \code{"Signal levels"}}
+
+\item{fill.guide_}{logical, specify if legend should be displayed}
 
 \item{ylimits_}{TRUE FALSE or vector of minimum and maximum of y axes}
 
@@ -26,8 +33,9 @@ Function must be defined as a lambda construct \code{function(x, ...){...}}.}
 }}
 }
 \description{
-...
+This functions return ggplot2 figure that visualise Information
+ Theoretic Response Curves and specificity of cellular response to particular signals.
 }
-\examples{
-...
+\details{
+TODO important
 }

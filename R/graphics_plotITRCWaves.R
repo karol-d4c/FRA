@@ -1,23 +1,33 @@
 #' plotITRCWaves
 #'
-#' ...
-#' @param model ITRC model
+#' @description This functions return ggplot2 figure that visualise Information
+#'  Theoretic Response Curves and specificity of cellular response to particular signals.
+#'
+#' @param model ITRCModel object return by ITRC function
+#' @param title_ character, specify title of plot, default \code{"Information Theoretic Response Curve"}
+#' @param xlab_ character, label of x axes, default \code{"States number"}
+#' @param ylab_ character, label of y axes and legend title, default \code{"Signal levels"}
+#' @param ylimits_ TRUE FALSE or vector of minimum and maximum of y axes
+#' @param fill.guide_ logical, specify if legend should be displayed
 #' @inheritDotParams rescaleSignalsValues
 # #' @inheritDotParams GetPlotTheme
-#' @param ylimits_ TRUE FALSE or vector of minimum and maximum of y axes
-#' @examples ...
+#' @details TODO important
 #' @export
 plotITRCWaves <-
   function(
     model,
-    plot.title_ = "Information Theoretic Response Curve",
+    title_ = "Information Theoretic Response Curve",
     xlab_ = "States number",
     ylab_ = "Signal levels",
-    title_ = "",
     fill.guide_ = TRUE,
     ylimits_ = TRUE,
     ...
   ){
+    if(is.null(model)){
+      stop("model must be an object of class ITRCModel")
+    } else if(class(model) != "ITRCModel"){
+      stop("model must be an object of class ITRCModel")
+    }
 
     model <-
       CalculateConfusion(

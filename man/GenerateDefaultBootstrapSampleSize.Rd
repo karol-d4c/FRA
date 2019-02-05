@@ -8,7 +8,9 @@ GenerateDefaultBootstrapSampleSize(model, bootstrap.sample_size, ...)
 }
 \arguments{
 \item{model}{ITRCModel}
+
+\item{bootstrap.sample_size}{size of one bootstrap sample}
 }
 \description{
-GenerateDefaultBootstrapSampleSize
+This function defines default size of a bootstrap sample
 }

@@ -1,10 +1,19 @@
 #' GenerateNoBootstrapSample
+#'
+#' @param model ITRCModel
+#'
+#' @description This function generate bootstrap samples
+#'
 GenerateNoBootstrapSample <-
   function(model){
     UseMethod("GenerateNoBootstrapSample")
   }
 
 #' GenerateNoBootstrapSample.ITRCModel
+#'
+#' @param model ITRCModel
+#'
+#' @description This function generate bootstrap samples
 #'
 GenerateNoBootstrapSample.ITRCModel <-
   function(
@@ -27,7 +36,10 @@ GenerateNoBootstrapSample.ITRCModel <-
   }
 
 #' GenerateBootstrapSample
-#' @param model
+#'
+#' @description This function generate bootstrap samples
+#'
+#' @param model ITRCModel
 #'
 GenerateBootstrapSample <-
   function(model,
@@ -37,11 +49,13 @@ GenerateBootstrapSample <-
 
 #' GenerateBootstrapSample.ITRCModel
 #'
-#' @param model
-#' @param bootstrap.number
-#' @param bootstrap.sample_size
+#' @param model ITRCModel
+#' @param bootstrap.number number of bootstrap sampling
+#' @param bootstrap.sample_size size of one bootstrap sample
 #'
 #' @importFrom foreach %dopar%
+#' @importFrom foreach %do%
+#' @importFrom dplyr %>%
 #'
 GenerateBootstrapSample.ITRCModel <-
   function(

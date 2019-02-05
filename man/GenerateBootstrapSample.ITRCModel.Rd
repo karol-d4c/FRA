@@ -8,7 +8,11 @@
   bootstrap.sample_size = NULL, parallel_cores = 1, ...)
 }
 \arguments{
-\item{bootstrap.sample_size}{}
+\item{model}{ITRCModel}
+
+\item{bootstrap.number}{number of bootstrap sampling}
+
+\item{bootstrap.sample_size}{size of one bootstrap sample}
 }
 \description{
 GenerateBootstrapSample.ITRCModel

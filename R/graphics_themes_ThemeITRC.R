@@ -1,10 +1,16 @@
 #' theme_itrc
 #'
-#' @param ...
+#' @description This function specify theme used in the ITRC package
 #'
-#' @return ...
+#' @param  theme.base_size = 12,
+#' @param  theme.base_family = "sans",
+#' @param  theme.title_size = 36,
+#' @param  theme.text_size = 3*theme.title_size/4,
+#' @param  theme.margins = c(1,1, 1, 1),
+#' @param  legend.position = "right",
 #'
-#' @examples ...
+#' @return ggthemes::theme_foundation object
+#'
 #' @export
 theme_itrc <-  function(
   theme.base_size = 12,

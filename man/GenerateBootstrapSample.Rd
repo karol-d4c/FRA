@@ -7,8 +7,8 @@
 GenerateBootstrapSample(model, ...)
 }
 \arguments{
-\item{model}{}
+\item{model}{ITRCModel}
 }
 \description{
-GenerateBootstrapSample
+This function generate bootstrap samples
 }

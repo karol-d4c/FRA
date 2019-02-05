@@ -33,7 +33,6 @@ rescaleSignalsValues.logarithmic <-
 #' Function must be defined as a lambda construct \code{function(x, ...){...}}.
 #' @param rescale.fun.args list of the arguments to defaults \code{rescale.fun}
 #'
-#'
 rescaleSignalsValues <-
   function(
     signal.list,
@@ -113,18 +112,12 @@ rescaleSignalsValues <-
     return(signal.rescale.df)
   }
 
-
-# rcc.waves.logfun <- function(x){log(x = x, base = 10)}
-# rcc.waves.logStim.0 <- 0.001
-# rescale.signal.fun <- function(x){log(x = x, base = 10)}
-
 #' rescaleSignalsValues.DataFrame
 #'
-#' @param model .
-#' @col.to.rescale .
-#' @col.rescaled .
+#' @param model ITRCModel
+#' @param col.to.rescale character, define column that must be rescaled
+#' @param col.rescaled character, define name of the rescaled
 #' @inheritDotParams rescaleSignalsValues
-#'
 rescaleSignalsValues.DataFrame <-
   function(
     model,

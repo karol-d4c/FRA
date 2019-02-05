@@ -1,3 +1,8 @@
+#' CalculateConfuison
+#'
+#' @description This function calculates confusiuon waves from confusion matrix.
+#' model need to have confusion matrix attribute
+#'
 CalculateConfusion <-
   function(model,
            ...){

@@ -6,6 +6,9 @@
 \usage{
 \method{GenerateNoBootstrapSample}{ITRCModel}(model, ...)
 }
+\arguments{
+\item{model}{ITRCModel}
+}
 \description{
-GenerateNoBootstrapSample.ITRCModel
+This function generate bootstrap samples
 }

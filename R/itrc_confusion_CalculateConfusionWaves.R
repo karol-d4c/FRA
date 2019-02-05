@@ -1,4 +1,9 @@
-#'
+#' @importFrom stats na.omit
+#' @importFrom stats predict
+#' @importFrom stats sd
+#' @importFrom stats setNames
+#' @importFrom foreach "%do%"
+#' @importFrom dplyr "%>%"
 #'
 CalculateConfusionWaves <-
   function(
@@ -8,7 +13,7 @@ CalculateConfusionWaves <-
 
     foreach::foreach(signal_ = signal.list) %do% {
       model$confusion.matrix %>%
-        dplyr::filter(max.signal == max(max.signal)) %>%
+        dplyr::filter_("max.signal == max(max.signal)") %>%
         dplyr::filter_(
           paste(model$signal, "==", signal_)) %>%
         dplyr::mutate_(if_else_signal = model$signal,
@@ -54,7 +59,7 @@ CalculateConfusionWaves <-
         }) %>%
           dplyr::mutate_(
             .dots =
-              setNames(
+              stats::setNames(
                 nm = c(model$signal,
                        model$class
                        #, max.signal

@@ -1,8 +1,10 @@
 #' GenerateDefaultBootstrapSampleSize
 #'
+#' @description This function defines default size of a bootstrap sample
+#'
 #' @param model ITRCModel
-#' @param bootstrap.number
-#' @param bootstrap.sample_size
+#' @param bootstrap.sample_size size of one bootstrap sample
+#'
 GenerateDefaultBootstrapSampleSize <-
   function(
   model,

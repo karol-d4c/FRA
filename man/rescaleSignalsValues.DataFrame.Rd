@@ -8,7 +8,11 @@ rescaleSignalsValues.DataFrame(model, col.to.rescale = "signal",
   col.rescaled = "signal_rescaled", ...)
 }
 \arguments{
-\item{model}{.}
+\item{model}{ITRCModel}
+
+\item{col.to.rescale}{character, define column that must be rescaled}
+
+\item{col.rescaled}{character, define name of the rescaled}
 
 \item{...}{Arguments passed on to \code{rescaleSignalsValues}
 \describe{
