@@ -114,6 +114,7 @@ plotITRCWaves <-
 
     g.plot +
       ggplot2::scale_fill_manual(
+        guide = fill.guide_,
         name = xlab_,
         values = colors,
         labels = signals.rescale.df[[model$signal]]
