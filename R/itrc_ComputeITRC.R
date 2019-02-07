@@ -6,12 +6,13 @@ ComputeITRC <-
            MaxNWts = 5000,
            ...
   ) {
+    signal.list <- (model$data %>%
+                     dplyr::arrange_(model$signal) %>%
+                     dplyr::distinct_(model$signal))[[model$signal]]
 
     compuatations.task.list <-
       GetComputationsTasks(
-        signal.list = (model$data %>%
-                         dplyr::arrange_(model$signal) %>%
-                         dplyr::distinct_(model$signal))[[model$signal]],
+        signal.list = signal.list,
         bootstrap.samples = model$bootstrap.samples)
 
     if(length(compuatations.task.list) < 1){
@@ -53,7 +54,7 @@ ComputeITRC <-
             predict(object  = lr_model,
                     newdata = df.res.newdata$data)
 
-          df.res.newdata$data$class <- lr.fit
+          df.res.newdata$data$class <- as.numeric(as.character(lr.fit))
 
           df.res.newdata$data %>%
             dplyr::select_(paste("c(",
@@ -93,7 +94,10 @@ ComputeITRC <-
              "max.signal",
               "bootstrap") %>%
            dplyr::summarise(
-             counts.sum = sum(counts)))) %>%
+             counts.sum = sum(counts))),
+        by = c(model$signal,
+               "max.signal",
+               "bootstrap" )) %>%
       dplyr::group_by_(
         model$signal,
         model$class,
@@ -114,6 +118,49 @@ ComputeITRC <-
       rbind(model$confusion.matrix) ->
       model$confusion.matrix
 
+    signal_class.df <-
+      expand.grid(signal.list,
+                  signal.list,
+                  signal.list)
+    colnames(signal_class.df)  <- c(model$signal,
+                                    model$class,
+                                    "max.signal")
+    signal_class.df %>%
+      dplyr::filter_(paste(model$signal, "<=", "max.signal")) %>%
+      dplyr::filter_(paste(model$class, "<=", "max.signal")) ->
+      signal_class.df
+    signal_class.df$inner_join_id_ <- 1:nrow(signal_class.df)
+
+    signal_class.df %>%
+      dplyr::inner_join(model$confusion.matrix,
+                        by = c(model$signal,
+                               model$class,
+                               "max.signal")) ->
+      signal_class.inner_join.df
+
+    signal_class.df[
+      signal_class.df$inner_join_id_[
+        -which(signal_class.df$inner_join_id_ %in%
+                 signal_class.inner_join.df$inner_join_id_)],] ->
+      signal_class.df
+
+    model$confusion.matrix %>%
+      rbind(
+        (signal_class.df %>%
+           dplyr::select_(
+             paste("c(",
+                   model$signal, ",",
+                   model$class, ",",
+                   "max.signal)")
+           ) %>%
+           dplyr::left_join(
+             y = model$confusion.matrix %>%
+               dplyr::group_by_("max.signal") %>%
+               dplyr::summarise(prob = 0, prob.sd = 0),
+             by = "max.signal"
+           ))) ->
+      model$confusion.matrix
+
     model$confusion.table %>%
       dplyr::left_join(
         (model$confusion.table %>%
@@ -122,7 +169,10 @@ ComputeITRC <-
              "max.signal",
              "bootstrap") %>%
            dplyr::summarise(
-             counts.sum = sum(counts)))) %>%
+             counts.sum = sum(counts))),
+        by = c(model$signal,
+               "max.signal",
+               "bootstrap")) %>%
       dplyr::filter_(
         paste(model$signal,
               "==",
@@ -185,5 +235,24 @@ ComputeITRC <-
       ) ->
       model$itrc
 
+    model$confusion.matrix %>%
+      dplyr::arrange(as.numeric(class)) %>%
+      dplyr::arrange_(paste("as.numeric(", model$signal, ")")) %>%
+      dplyr::filter(max.signal == max(max.signal)) %>%
+      reshape2::dcast(
+        formula = paste( model$signal, "~", model$class),
+        value.var = "prob") ->
+      confusion.matrix
+    confusion.matrix[which(is.na(confusion.matrix), arr.ind = TRUE)] <- 0
+    signals <- confusion.matrix[,1]
+    confusion.matrix <- confusion.matrix[,-1]
+    confusion.matrix <-
+      confusion.matrix[
+        order(as.numeric(signals)),
+        order(as.numeric(colnames(confusion.matrix)))]
+    rownames(confusion.matrix) <-
+      signals[order(as.numeric(signals))]
+    model$confusion.matrix.wide <-
+      confusion.matrix
     return(model)
   }

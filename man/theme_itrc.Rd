@@ -4,9 +4,11 @@
 \alias{theme_itrc}
 \title{theme_itrc}
 \usage{
-theme_itrc(theme.base_size = 12, theme.base_family = "sans",
-  theme.title_size = 36, theme.text_size = 3 * theme.title_size/4,
-  theme.margins = c(1, 1, 1, 1), legend.position = "right", ...)
+theme_itrc(theme.base_size = 9, theme.base_family = "sans",
+  theme.title_size = 12, theme.text_size = 9,
+  theme.text.axes_size = 9, theme.text.strip_size = 9,
+  theme.text.legend_size = 12, theme.margins = c(1, 1, 1, 1),
+  legend.position = "right", ...)
 }
 \arguments{
 \item{theme.base_size}{= 12,}

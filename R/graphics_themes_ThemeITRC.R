@@ -13,10 +13,13 @@
 #'
 #' @export
 theme_itrc <-  function(
-  theme.base_size = 12,
+  theme.base_size = 9,
   theme.base_family = "sans",
-  theme.title_size = 36,
-  theme.text_size = 3*theme.title_size/4,
+  theme.title_size = 12,
+  theme.text_size = 9,
+  theme.text.axes_size = 9,
+  theme.text.strip_size = 9,
+  theme.text.legend_size = 12,
   theme.margins = c(1,1, 1, 1),
   legend.position = "right",
   ...
@@ -32,10 +35,10 @@ theme_itrc <-  function(
         colour = NA),
       plot.title = ggplot2::element_text(
         colour = "#3C3C3C",#ggthemes::ggthemes_data$fivethirtyeight$value[1],
-        vjust = 1,
+        vjust = 0.5,
         hjust = 0.5,
-        size = theme.title_size,
-        face="bold"),
+        size  = theme.title_size,
+        face  = "bold"),
       text = ggplot2::element_text(
         colour = "#000000"
           #ggthemes::ggthemes_data$fivethirtyeight$value[1] previously
@@ -45,18 +48,25 @@ theme_itrc <-  function(
           size = theme.title_size),
       axis.title.y =
         ggplot2::element_text(
-          angle = 90),
+          angle = 90
+          ),
       axis.text =
         ggplot2::element_text(
-          size = theme.text_size,
+          size  = theme.text.axes_size,
           face = "bold"),
       axis.text.x =
         ggplot2::element_text(
+          vjust = 0.5,
+          hjust = 0.5,
           angle = 90),
       axis.ticks = ggplot2::element_blank(),
       axis.line.x = ggplot2::element_line(),
       axis.line.y = ggplot2::element_blank(),
       legend.position = legend.position,
+      legend.title =
+        ggplot2::element_text(
+          size = theme.text.legend_size
+        ),
       legend.background =
         ggplot2::element_rect(fill = "white"),
       panel.grid =
@@ -75,12 +85,11 @@ theme_itrc <-  function(
         ggplot2::unit(theme.margins, "lines"),
       plot.background =
         ggplot2::element_rect(fill = "white"),
-
       strip.background =
         ggplot2::element_rect(fill = "white"),
       strip.text =
         ggplot2::element_text(
-          size= theme.text_size,
+          size= theme.text.strip_size,
           face="bold",
           vjust = 0.5,
           lineheight = theme.text_size*3

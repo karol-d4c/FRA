@@ -87,20 +87,22 @@ GenerateBootstrapSample.ITRCModel <-
         signal_ =
           (model$data %>%
              dplyr::distinct_(model$signal))[[model$signal]]) %dopar% {
-               data.frame(
-                 bootstrap = bootstrap.i,
-                 bootstrap.sample = paste(bootstrap.i,
-                                          signal_,
-                                          1:bootstrap.number,
-                                          sep = "_"),
-                 sample    =
-                   sample(
-                     x =
-                       (model$data %>%
-                          dplyr::filter_(paste(model$signal, "==" , signal_)))[[model$sample]],
-                     size = bootstrap.sample_size,
-                     replace = TRUE
-                   ))
+               df <-
+                 data.frame(
+                   bootstrap = bootstrap.i,
+                   bootstrap.sample = paste(bootstrap.i,
+                                            signal_,
+                                            1:bootstrap.sample_size,
+                                            sep = "_"))
+               df[[model$sample]] <-
+                 sample(
+                   x =
+                     (model$data %>%
+                        dplyr::filter_(paste(model$signal, "==" , signal_)))[[model$sample]],
+                   size = bootstrap.sample_size,
+                   replace = TRUE
+                 )
+               return(df)
              } %>%
         do.call(what = rbind,
                 args = .) %>%
@@ -117,5 +119,5 @@ GenerateBootstrapSample.ITRCModel <-
          dplyr::distinct(bootstrap))[["bootstrap"]]
 
     return(model)
-}
+  }
 

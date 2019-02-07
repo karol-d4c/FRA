@@ -70,7 +70,4 @@ ITRC <-
 
     return(model)
 
-}
-
-
-
+  }

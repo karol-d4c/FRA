@@ -37,6 +37,9 @@ new_ITRCModel <-
       if(!(as.character(signal) %in% colnames(data))){
         stop(paste("data has not column named", signal))
       }
+      if(!all(sapply(data[[signal]], is.numeric))){
+        stop(paste("input signal must be numeric"))
+      }
     }
     if(!exists(x = "response")){
       stop("data not defined")
@@ -65,4 +68,46 @@ new_ITRCModel <-
       )
     class(model) <- "ITRCModel"
     return(model)
+  }
+
+
+#' print.ITRCModel
+#'
+#' @export
+print.ITRCModel <-
+  function(x, ...) {
+    #print(format(x, ...), "\n")
+    cat(format(class(x), justify = "left"), "\n")
+    cat("formula :",
+        x$signal,
+        "~",
+        paste(x$response, collapse = "+"),
+        "\n")
+
+    cat("confusion matrix :", "\n")
+    print(round(as.matrix(x$confusion.matrix.wide), digits = 2))
+    # print(
+    #   format(
+    #     print(round(as.matrix(x$confusion.matrix.wide), digits = 2)),
+    #           justify = "left",
+    #     digits = TRUE),
+    #   digits = 3)
+  }
+
+#' format.ITRCModel
+format.ITRCModel <-
+  function(
+    model,
+    ...
+  ){
+    paste(
+      format(class(model)),
+      "\n",
+      paste("formula :",
+            model$signal,
+            "~",
+            paste(model$response, collapse = "+")),
+      "\n",
+      "confusion matrix 12312\n",
+      format(as.matrix(model$confusion.matrix.wide)))
   }

@@ -16,11 +16,13 @@
 plotITRCWaves <-
   function(
     model,
-    title_ = "Information Theoretic Response Curve",
+    title_ =
+      "Information Theoretic Response Curve",
     xlab_ = "States number",
     ylab_ = "Signal levels",
     fill.guide_ = TRUE,
     ylimits_ = TRUE,
+    alpha_ = 0.5,
     ...
   ){
     if(is.null(model)){
@@ -43,8 +45,6 @@ plotITRCWaves <-
         col.rescaled   = col.rescaled,
         ...)
 
-    print(signals.rescale.df)
-    print(as.numeric(signals.rescale.df[[col.rescaled]]))
     colors <-
       GetLevelColors(
         levels = as.numeric(signals.rescale.df[[col.rescaled]]),
@@ -108,7 +108,7 @@ plotITRCWaves <-
           y = y.waves,
           fill = fill.waves,
           group = group.waves),
-        alpha = 0.5
+        alpha = alpha_
       ) ->
       g.plot
 

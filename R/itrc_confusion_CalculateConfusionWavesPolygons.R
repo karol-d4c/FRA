@@ -15,11 +15,8 @@ CalculateConfusionWavesPolygons <-
           what = rbind,
           args = foreach::foreach(class_level_ =  1:length(signal.list)) %do% {
             (confusion.waves %>%
-               dplyr::filter(signal == class &
-                               (1 >= abs(class_level_ -
-                                           signal_level))) %>%
-               dplyr::mutate(position = itrc)
-            ) %>%
+               dplyr::filter_(paste(model$signal, "==", model$class, "&", "(1 >= abs(class_level_ - signal_level))")) %>%
+               dplyr::mutate(position = itrc)) %>%
               rbind(
                 (confusion.waves %>%
                    dplyr::filter((class_level == class_level_ - 1) &
