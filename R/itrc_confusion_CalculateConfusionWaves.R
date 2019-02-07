@@ -16,8 +16,8 @@ CalculateConfusionWaves <-
         dplyr::filter_("max.signal == max(max.signal)") %>%
         dplyr::filter_(
           paste(model$signal, "==", signal_)) %>%
-        dplyr::mutate_(if_else_signal = model$signal,
-                       if_else_class = model$class) %>%
+        dplyr::mutate_(if_else_signal = paste("as.numeric(", model$signal, ")"),
+                       if_else_class = paste("as.numeric(", model$class, ")")) %>%
         dplyr::mutate(
           comparison =
             dplyr::if_else(
