@@ -20,7 +20,7 @@ plotITRCWaves <-
       "Information Theoretic Response Curve",
     xlab_ = "States number",
     ylab_ = "Signal levels",
-    fill.guide_ = TRUE,
+    fill.guide_ = "legend",
     ylimits_ = TRUE,
     alpha_ = 0.5,
     ...

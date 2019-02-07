@@ -49,13 +49,15 @@ new_ITRCModel <-
                    paste(response, collapse = " ")))
       }
     }
+
     if(!exists(x = "sample")){
       data[["sample"]] <- 1:nrow(data)
-      sample <- sample
+      sample <- "sample"
+    } else if (!(as.character(sample) %in% colnames(data))){
+      data[["sample"]] <- 1:nrow(data)
+      sample <- "sample"
     }
-    if(!(as.character(sample) %in% colnames(data))){
-      stop(paste("data has not column named", sample))
-    }
+
     model <-
       list(data =
              data %>%
