@@ -1,0 +1,257 @@
+---
+title: "Information Theoretic Response Curves"
+author: "Karol Nienałtowski"
+email: "k.nienaltowski@sysbiosig.org"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  fig.width = 7, 
+  fig.height = 5
+)
+```
+
+
+# Introduction
+
+This vignette demonstrates how to use the ITRC package, that extends the representation of dose-response relationship into multidimmensional response and by considering distribution of response instead of its statistics e.g mean/median. Here, we will use experimental data firstly attatched to  [`SLEMI` package](https://github.com/sysbiosig/SLEMI), that shows relation between stimulation of cells by TNF-$\alpha$ and  ration of nuclear to cellular concentration of NF-$\kappa$B in time (see more in [Tjetka et al](https://arxiv.org/abs/1808.05581)).
+
+
+ITRC package can be installed usign `devtools` package as following
+```{r echo=TRUE, eval=FALSE}
+require(devtools)
+devtools::install_github("stork119/ITRC", auth_token = [AUTHORISATION_TOKEN])
+```
+`[AUTHORISATION_TOKEN]` can be obtained  after sending an email on address <k.nienaltowski@sysbiosig.org>.
+
+We will use the following packages:
+
+```{r echo=TRUE}
+require(ITRC)
+require(dplyr)
+require(foreach)
+```
+
+# Theory
+<!-- Confusion Matrix ---!>
+
+<!-- Information-theoretic response curve is defined as relation between boundary signal level and a maximal cumalative fraction of samples that response specifically to the their signal level. In case of minimal signal level the ITRC value is equal to one because only one possible signal level is considered.  -->
+
+<!-- Confusion Matrix Wave plot additionaly characteristise unspecific response to the signal. Briefly, the height of the area in the  -->
+
+<!-- The Wave colors show the fraction of cells that responses -->
+
+# Computation
+## NF$\kappa$B data set
+
+
+
+The data set NF$\kappa$B is attatched to `ITRC` package and  has the following structure:
+  
+```{r}
+head(ITRC::data.itrc.nfkb)
+```
+
+Each row of data sets represents a response in time of single-cell to the stimulation by TNF-$\alpha$. Columns shows:
+
+* column `signal` defines level of TNF-$\alpha$  stimulation,
+
+* column `samples` represents identifcation of single cells,
+
+* columns  $0, 3, 6, \ldots, 60$ describe response of single-cell in time.
+
+
+## Computation of Information Theroetic Response Curve and Confusion Matrix
+
+In order to compute Information Theroetic Response Curve and Confusion Matrix we need to use call `ITRC`
+
+```{r echo=FALSE, eval=TRUE, cache=TRUE}
+model.nfkb <- 
+  ITRC::ITRC(
+    data = ITRC::data.itrc.nfkb, 
+    signal = "signal",
+    sample = "sample",
+    response = 
+      c("0",  "3",  "6",  "9",  
+        "12", "15", "18", "21", 
+        "24", "27", "30", "33", 
+        "36", "39", "42", "45", 
+        "48", "51", "54", "57", 
+        "60"),
+    parallel_cores = 4,
+    bootstrap = TRUE,
+    bootstrap.number = 2,
+    bootstrap.sample_size = 1000)
+```
+
+
+
+```{r eval=FALSE}
+model.nfkb <- 
+  ITRC::ITRC(
+    data = ITRC::data.itrc.nfkb, 
+    signal = "signal",
+    sample = "sample",
+    response = 
+      c("0",  "3",  "6",  "9",  
+        "12", "15", "18", "21", 
+        "24", "27", "30", "33", 
+        "36", "39", "42", "45", 
+        "48", "51", "54", "57", 
+        "60"),
+    parallel_cores = 4,
+    bootstrap = TRUE,
+    bootstrap.number = 100,
+    bootstrap.sample_size = 1000)
+```
+
+Main ITRC arguments specify:
+
+* data - a data.frame or data.table object in a wide format that describe response (might be multidimmensional) of the samples to the signal (now only one dimmensional); data.frame data consists columns of names defined by sample, signal (optional), and response; each row represents a response of one sample to the input signal; column signal define the input signal; columns response define the multidimmensional (optional) response to the input signal; column sample specify identifaction of sample; if sample is not defined then sample is identified by row number; 
+* signal - character, specify name of the column that represents the input signal; 	
+* response vector of characters, that specify names of the columns that represents the output response;
+* sample	- character (optional), specify name of the column that consists identifiaction of sample;
+* parallel_cores - specify number of cores used for computations, default = 1
+
+Robustness of ITRC and confusion matrix is obtained by using bootstrap sampling procedure. In order to enable bootstrap we need to pass logical argument `r<bootstrap = TRUE>`. Moreover, user can define number of bootstrap samples `r<bootstrap.number>` and the size of bootstrap sample from each signal `r<bootstrap.sample_size>`. Robustness of the method increase with the number of bootstrap samples. We suggest user to verify if `bootstrap.number` argument is chosen properly in each case, when procedure is used for new data sets. Argument `bootstrap.sample_size` should be chosen carefully and should be in the same order samples number for each signal level.
+
+
+The result of the function is object of class `ITRCModel` that can be summarised by:
+```{r}
+print(model.nfkb)
+```
+
+`ITRCModel` object contains among others data frame with ITRC `model.nfkb$itrc` and confusion matrix `model.nfkb$confusion.matrix`(call `?ITRC` for details about other elements of this object). 
+
+## Plotting ITRC waves
+
+To aggregate Information Theoretic Response Curves and confusion matrix in one plot we propose to call function `plotITRCWaves`:
+```{r}
+g.nfkb <- ITRC::plotITRCWaves(model = model.nfkb) 
+print(g.nfkb)
+```
+
+In the plot ITRC is represented by black line and dots that shows signal levels. 
+
+Colored areas, that we called 'waves' characterise unspecific response for each signal. 
+First of all for each signal the fraction of cells that responded unspecifically to this signal level was represented in the height of the wave in the signal level point. Hence, the height of the wave in each point is in the range $[0, 1]$. Part of the wave above the ITRC line shows fraction of cells that response is characteristic for higher signals. Analogusly, wave under ITRC line corresponds to responses charactersitic for lower signals. Colors depict fraction of cells that responses unspecifically that is characteristic for signal in such color.
+
+To obtain informative plots it is necessary to adjust additional theme and plot arguments.
+
+### Adjusting x axis
+
+Argument `rescale.fun` of plotITRCWaves is used to define scale of x axisas well as colors palletes range. In default `rescale.fun = "factor"`, what lead to representation of singal lavels as factors. `rescale.fun` can be defined as (1) numeric: `rescale.fun = "numeric"`, (2) logarithmic: `rescale.fun = "numeric"`, which base of the logarithm is passed by argument `rescale.fun.args = list(base = [BASE_VALUE])`, in default base is equal to  $e = exp(1)$, (3) factor with differen signal order: `rescale.fun = "factor"`  and signals' order defined in an argument `rescale.fun.args = list(levels = [c(SIGNALS_ORDER)])` , (4) more sophisticated resaling function can be passed as as a lambda construct function, i.e. `rescale.fun = function(x, ...){...}`. Below, we can see example of rescaling function usage:
+
+```{r}
+g.nfkb.log10 <-
+  ITRC::plotITRCWaves(
+  model = model.nfkb,
+  rescale.fun = 
+    function(x, ...){
+      return(2*x)
+    }) 
+print(g.nfkb.log10)
+```
+
+```{r}
+g.nfkb.loge <-
+  ITRC::plotITRCWaves(
+  model = model.nfkb,
+  rescale.fun = 'logarithmic') 
+print(g.nfkb.loge)
+```
+### Colors palletes
+
+Function plotITRCWaves enables choice of color pallete. We suggest to use `virdis` colors pallete. Four options are available: "magma" (or "A"), "inferno" (or "B"), "plasma" (or "C"), "viridis" (or "D", the default option) and "cividis" (or "E"). Below there is a a default "virdis" pallete.
+```{r}
+library(viridis)
+library(scales)
+show_col(viridis_pal(option = "D")(64), labels = FALSE)
+```
+
+In order to change pallete  we need to specify arguments `pallete` and `pallete.args` as following:
+
+```{r}
+g.nfkb.magma <- 
+  ITRC::plotITRCWaves(
+    model = model.nfkb,
+    pallete = "virdis",
+    pallete.args = 
+      list(option = "B")
+    ) 
+print(g.nfkb.magma)
+```
+
+Moreover, it is possible funtcion plotITRCWaves enables to define own pallete, by setting list of colors, as:
+```{r}
+g.nfkb.colors_pallete <- 
+  ITRC::plotITRCWaves(
+    model = model.nfkb,
+    pallete = c("yellow", "orange", "red")
+    ) 
+print(g.nfkb.colors_pallete)
+```
+### Themes arguments
+
+<!-- This vignette demonstrates how to use the randomForestExplainer package. We will use the `Boston` from package `MASS`. In fact, the development of randomForestExplainer was motivated by problems that include lots of predictors and not many observations. However, as they usually require growing large forests and are computationally intensive, we use the small `Boston` data set here and encourage you to follow our analysis of such large data set concerning glioblastoma here: [initial vignette](https://rawgit.com/geneticsMiNIng/BlackBoxOpener/master/randomForestExplainer/inst/doc/randomForestExplainer.html). -->
+
+
+<!-- Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format: -->
+
+<!-- - Never uses retina figures -->
+<!-- - Has a smaller default figure size -->
+<!-- - Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style -->
+
+<!-- ## Vignette Info -->
+
+<!-- Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette. -->
+
+<!-- ## Styles -->
+
+<!-- The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows: -->
+
+<!--     output:  -->
+<!--       rmarkdown::html_vignette: -->
+<!--         css: mystyles.css -->
+
+<!-- ## Figures -->
+
+<!-- The figure sizes have been customised so that you can easily put two images side-by-side.  -->
+
+<!-- ```{r, fig.show='hold'} -->
+<!-- plot(1:10) -->
+<!-- plot(10:1) -->
+<!-- ``` -->
+
+<!-- You can enable figure captions by `fig_caption: yes` in YAML: -->
+
+<!--     output: -->
+<!--       rmarkdown::html_vignette: -->
+<!--         fig_caption: yes -->
+
+<!-- Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**. -->
+
+<!-- ## More Examples -->
+
+<!-- You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`. -->
+
+<!-- ```{r, echo=FALSE, results='asis'} -->
+<!-- knitr::kable(head(mtcars, 10)) -->
+<!-- ``` -->
+
+<!-- Also a quote using `>`: -->
+
+<!-- > "He who gives up [code] safety for [code] speed deserves neither." -->
+<!-- ([via](https://twitter.com/hadleywickham/status/504368538874703872)) -->

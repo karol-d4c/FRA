@@ -22,4 +22,6 @@ Imports:
 Depends:
   dplyr,
   foreach
-    
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

@@ -1,0 +1,89 @@
+---
+title: "Information Theoretic Response Curves"
+author: "Karol Nienałtowski"
+email: "k.nienaltowski@sysbiosig.org"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = TRUE, 
+  warning = FALSE, 
+  message = FALSE, 
+  fig.width = 7, 
+  fig.height = 5
+)
+```
+### Installation
+
+ITRC package can be installed usign `devtools` package as following
+```{r echo=TRUE, eval=FALSE}
+install.packages("devtools") # if devtools package is not installed
+require(devtools)
+devtools::install_github("stork119/ITRC", auth_token = [AUTHORISATION_TOKEN])
+```
+`[AUTHORISATION_TOKEN]` can be obtained  on request after sending an email on address <k.nienaltowski@sysbiosig.org>.
+
+```{r echo=FALSE, eval = TRUE}
+library(ITRC)
+library(dplyr)
+```
+
+### Data description
+
+For the calculation of channel capacity between X and Y you need structure experimental data into a single data.frame object with observations in rows, one column with values of input (signal) and columns with measured output (response) of numeric type.
+
+Example set of data is attatched into ITRC package, as:
+```{r echo=TRUE}
+head(ITRC::data.itrc.cytof)
+```
+
+### Run
+In order to compute novel response curves run `ITRC` function and plot them using `plotITRCWaves` function: 
+```{r echo=TRUE, eval=FALSE}
+model <-
+  ITRC(
+    data = ITRC::data.itrc.cytof,
+    signal = "Stim",
+    response = c("pSTAT1", "pSTAT3", "pSTAT4", "pSTAT5", "pSTAT6"),
+    parallel_cores = 4, 
+    bootstrap.number = 100 
+    )
+```
+
+```{r echo=FALSE, eval=TRUE, cache=TRUE}
+model <-
+  ITRC(
+    data = ITRC::data.itrc.cytof,
+    signal = "Stim",
+    response = c("pSTAT1", "pSTAT3", "pSTAT4", "pSTAT5", "pSTAT6"),
+    parallel_cores = 4,
+    bootstrap.number = 20)
+```
+
+```{r}
+plotITRCWaves(model = model)
+```
+
+More detailes can abot model can be obtained by:
+```{r}
+print(model)
+```
+
+### Parameters details
+
+* data - a data.frame or data.table object in a wide format that describe response (might be multidimmensional) of the samples to the signal (now only one dimmensional); data.frame data consists columns of names defined by sample, signal (optional), and response; each row represents a response of one sample to the input signal; column signal define the input signal; columns response define the multidimmensional (optional) response to the input signal; column sample specify identifaction of sample; if sample is not defined then sample is identified by row number; 
+* signal - character, specify name of the column that represents the input signal; 	
+* response vector of characters, that specify names of the columns that represents the output response;
+* parallel_cores - specify number of cores used for computations, default = 1
+* bootstrap.number - number of bootstrap samples in bootstrap procedure used to increase robustness of ITRC and confusion matrix. Robustness of the method increase with the number of bootstrap samples. We suggest user to verify if `bootstrap.number` argument is chosen properly in each case, when procedure is used for new data sets.
+
+
+
