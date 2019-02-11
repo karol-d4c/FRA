@@ -117,11 +117,19 @@ GetPalleteColors <-
     if(length(pallete) == 1) {
        if(is.character(pallete)){
         if(pallete == "virdis"){
+          viridis_n <- 1000
+          viridis_end <- 1
           if(length(pallete.args) == 0){
             pallete.args <-
-              list(n = 1000,
+              list(n = viridis_n,
                    option = "D",
-                   end = 1)
+                   end = viridis_end)
+          }
+          if(!("n" %in% names(pallete.args))){
+            pallete.args[["n"]] <- viridis_n
+          }
+          if(!("end" %in% names(pallete.args))){
+            pallete.args[["end"]] <- viridis_end
           }
           colors.list <-
             do.call(what = viridis::viridis,

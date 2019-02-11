@@ -30,8 +30,7 @@ ITRC <-
     signal = "signal",
     response = "response",
     sample = "sample",
-    bootstrap = FALSE,
-    bootstrap.number = 2,
+    bootstrap.number = 0,
     bootstrap.sample_size = NULL,
     parallel_cores = 1,
     ...
@@ -44,7 +43,12 @@ ITRC <-
         response = response,
         sample = sample)
 
-    if(bootstrap){
+    if(!is.numeric(bootstrap.number)){
+      stop("Bootstrap number must be numeric")
+    }
+    bootstrap.number <- round(bootstrap.number)
+
+    if(bootstrap.number > 0){
       model <-
         GenerateBootstrapSample(
           model = model,

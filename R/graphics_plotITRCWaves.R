@@ -48,7 +48,8 @@ plotITRCWaves <-
     colors <-
       GetLevelColors(
         levels = as.numeric(signals.rescale.df[[col.rescaled]]),
-        levels.names = signals.rescale.df[[model$signal]]
+        levels.names = signals.rescale.df[[model$signal]],
+        ...
       )
 
     g.plot <-
