@@ -2,7 +2,7 @@
 title: "Information Theoretic Response Curves"
 author: "Karol Nienałtowski"
 email: "k.nienaltowski@sysbiosig.org"
-output: rmarkdown::html_vignette
+output: html_vignette
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
