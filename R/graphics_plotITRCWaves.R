@@ -23,6 +23,7 @@ plotITRCWaves <-
     fill.guide_ = "legend",
     ylimits_ = TRUE,
     alpha_ = 0.5,
+    signals.rescale.df = NULL,
     ...
   ){
     if(is.null(model)){
@@ -36,14 +37,17 @@ plotITRCWaves <-
         model,
         ...)
 
+
     col.rescaled <- "signal_rescaled"
     col.to.rescale <- model$signal
-    signals.rescale.df <-
-      rescaleSignalsValues.DataFrame(
-        model = model,
-        col.to.rescale = model$signal,
-        col.rescaled   = col.rescaled,
-        ...)
+    if(is.null(signals.rescale.df)){
+      signals.rescale.df <-
+        rescaleSignalsValues.DataFrame(
+          model = model,
+          col.to.rescale = model$signal,
+          col.rescaled   = col.rescaled,
+          ...)
+      }
 
     colors <-
       GetLevelColors(
@@ -133,7 +137,10 @@ plotITRCWaves <-
     } else {
       g.plot +
         ggplot2::scale_x_discrete(
-          name = xlab_)  ->
+          name = xlab_,
+          breaks = as.character(signals.rescale.df[[col.rescaled]]),
+          labels = as.character(signals.rescale.df[[col.to.rescale]]),
+          limits = as.character(signals.rescale.df[[col.to.rescale]]))  ->
         g.plot
     }
 

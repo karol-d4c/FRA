@@ -4,7 +4,7 @@
 #' @importFrom stats setNames
 #' @importFrom foreach "%do%"
 #' @importFrom dplyr "%>%"
-#'
+#' @export
 CalculateConfusionWaves <-
   function(
     model,

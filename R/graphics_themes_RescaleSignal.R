@@ -118,6 +118,7 @@ rescaleSignalsValues <-
 #' @param col.to.rescale character, define column that must be rescaled
 #' @param col.rescaled character, define name of the rescaled
 #' @inheritDotParams rescaleSignalsValues
+#' @export
 rescaleSignalsValues.DataFrame <-
   function(
     model,
