@@ -3,7 +3,7 @@
 ### ###
 
 input.path <- "../RCC/resources/input/"
-output.path <- "/media/knt/1624BB0024BAE1C31/KN/RCC/resources/nfkb/bootstrap/" -> model.path
+output.path <- "/media/knt/sdb2//KN/RCC/resources/nfkb/bootstrap/" -> model.path
 computation.path <- paste(output.path, "rcc_scc/", sep = "/")
 confusion_matrix.path <- paste(computation.path, "confusion_matrix", sep = "/") ### full
 output.analysis.path <- paste(output.path, "analysis", sep= "/")
@@ -52,15 +52,15 @@ data.nfkb <-
   data %>%
   data.table::data.table()
 
-data.nfkb %>%
-  dplyr::filter(
-    signal %in% c(
-      0,
-      0.01,
-      0.1,
-      1,
-      10,
-      100)) ->
+# data.nfkb %>%
+#   dplyr::filter(
+#     signal %in% c(
+#       0,
+#       0.01,
+#       0.1,
+#       1,
+#       10,
+#       100)) ->
 #   data.nfkb
 #
 # data.nfkb %>%
@@ -72,7 +72,7 @@ data.nfkb %>%
 #   data.nfkb
 
 data.itrc.nfkb <- data.nfkb
-
+data.itrc.nfkb.all <- data.nfkb
 devtools::use_data(
-  data.itrc.nfkb,
+  data.itrc.nfkb.all,
   overwrite = TRUE)
