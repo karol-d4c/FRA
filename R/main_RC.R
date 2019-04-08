@@ -1,7 +1,7 @@
-#' Compute Information-Theoretic Response Curve
+#' Compute standard Response Curve
 #'
 #' @description  This function calculate Information Theroetic Response Curves.
-#'
+#' @param model ITRC S3 object that could be obtain from ITRC function
 #' @param data A data.frame or data.table object in a wide format that describe
 #'  response (might be multidimmensional) of the samples to the signal
 #'  (now only one dimmensional). Data.frame \code{data} consists columns of names
@@ -24,8 +24,9 @@
 #' @return ITRC S3 object with
 #'
 #' @export
-ITRC <-
+RC <-
   function(
+    model = NULL,
     data,
     signal = "signal",
     response = "response",
@@ -36,42 +37,35 @@ ITRC <-
     ...
   ){
 
-    model <-
-      new_ITRCModel(
-        data = data,
-        signal = signal,
-        response = response,
-        sample = sample)
-
-    if(!is.numeric(bootstrap.number)){
-      stop("Bootstrap number must be numeric")
-    }
-    bootstrap.number <- round(bootstrap.number)
-
-    if(bootstrap.number > 0){
+    if(is.null(model)){
       model <-
-        GenerateBootstrapSample(
-          model = model,
-          bootstrap.number = bootstrap.number,
-          bootstrap.sample_size = bootstrap.sample_size,
-          parallel_cores = parallel_cores
-        )
-    } else {
-      model <-
-        GenerateNoBootstrapSample(
-          model = model
-        )
+        new_ITRCModel(
+          data = data,
+          signal = signal,
+          response = response,
+          sample = sample)
+
+      if(!is.numeric(bootstrap.number)){
+        stop("Bootstrap number must be numeric")
+      }
+      bootstrap.number <- round(bootstrap.number)
+
+      if(bootstrap.number > 0){
+        model <-
+          GenerateBootstrapSample(
+            model = model,
+            bootstrap.number = bootstrap.number,
+            bootstrap.sample_size = bootstrap.sample_size,
+            parallel_cores = parallel_cores
+          )
+      } else {
+        model <-
+          GenerateNoBootstrapSample(
+            model = model
+          )
+      }
     }
-
-
     #### TODO
-    model <-
-      ComputeITRC(
-        model = model,
-        parallel_cores =
-          parallel_cores,
-        ...)
-
     model <-
       ComputeRC(
         model = model,

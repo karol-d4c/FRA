@@ -6,7 +6,8 @@
 \usage{
 plotITRCWaves(model, title_ = "Information Theoretic Response Curve",
   xlab_ = "States number", ylab_ = "Signal levels",
-  fill.guide_ = "legend", ylimits_ = TRUE, alpha_ = 0.5, ...)
+  fill.guide_ = "legend", ylimits_ = TRUE, alpha_ = 0.5,
+  signals.rescale.df = NULL, ...)
 }
 \arguments{
 \item{model}{ITRCModel object return by ITRC function}
