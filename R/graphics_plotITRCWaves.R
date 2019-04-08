@@ -24,6 +24,7 @@ plotITRCWaves <-
     ylimits_ = TRUE,
     alpha_ = 0.5,
     signals.rescale.df = NULL,
+    getScaleY = getScaleY.ITRC,
     ...
   ){
     if(is.null(model)){
@@ -128,26 +129,26 @@ plotITRCWaves <-
 
     if(!is.factor(signals.rescale.df[[col.rescaled]])){
       g.plot +
-        ggplot2::scale_x_continuous(
-        name = xlab_,
-        breaks = signals.rescale.df[[col.rescaled]],
-        labels = signals.rescale.df[[col.to.rescale]]
-      )  ->
-      g.plot
+        getScaleXContinuous(
+          xlab = xlab_,
+          signals.rescale.df = signals.rescale.df,
+          col.rescaled = col.rescaled,
+          col.to.rescale = col.to.rescale
+        ) -> g.plot
     } else {
       g.plot +
-        ggplot2::scale_x_discrete(
-          name = xlab_,
-          breaks = as.character(signals.rescale.df[[col.rescaled]]),
-          labels = as.character(signals.rescale.df[[col.to.rescale]]),
-          limits = as.character(signals.rescale.df[[col.to.rescale]]))  ->
+        getScaleXDiscrete(
+            xlab = xlab_,
+            signals.rescale.df = signals.rescale.df,
+            col.rescaled = col.rescaled,
+            col.to.rescale = col.to.rescale
+          )->
         g.plot
     }
 
-
       if(is.logical(ylimits_)){
         if(ylimits_){
-          ylimits_ <- c(0, 1.2*max(ggplot.data.waves$position))
+          ylimits_ <- c(1, 1.2*max(ggplot.data.waves$position))
         } else {
           ylimits_ <- NULL
         }
@@ -160,20 +161,16 @@ plotITRCWaves <-
         }
       }
 
-      if(!is.null(ylimits_)){
+      if(!is.null(getScaleY)){
         g.plot +
-          ggplot2::scale_y_continuous(
-            name = ylab_,
-            limits = ylimits_
-          )
-      } else {
-        g.plot +
-          ggplot2::scale_y_continuous(
-            name = ylab_
-          )
-      } ->
-      g.plot
+          getScaleY(
+            ylab = ylab_,
+            ylimits = ylimits_,
+            ...
+          ) ->
+          g.plot
+      }
 
-
+    return(g.plot)
 
   }
