@@ -188,7 +188,6 @@ GetPalleteFun <-
 #' @inheritDotParams GetPalleteColors
 #'
 #' @return vector of colors for signal levels
-#'
 GetLevelColors <-
   function(
     levels,

@@ -9,6 +9,7 @@
 #' @param ylab_ character, label of y axes and legend title, default \code{"Signal levels"}
 #' @param ylimits_ TRUE FALSE or vector of minimum and maximum of y axes
 #' @param fill.guide_ logical, specify if legend should be displayed
+#' @param theme.signal optional, object returned by \code{GetRescaledSignalTheme}
 #' @inheritDotParams rescaleSignalsValues
 # #' @inheritDotParams GetPlotTheme
 #' @details TODO important
@@ -23,8 +24,8 @@ plotITRCWaves <-
     fill.guide_ = "legend",
     ylimits_ = TRUE,
     alpha_ = 0.5,
-    signals.rescale.df = NULL,
     getScaleY = getScaleY.ITRC,
+    theme.signal = NULL,
     ...
   ){
     if(is.null(model)){
@@ -38,31 +39,22 @@ plotITRCWaves <-
         model,
         ...)
 
-
-    col.rescaled <- "signal_rescaled"
-    col.to.rescale <- model$signal
-    if(is.null(signals.rescale.df)){
-      signals.rescale.df <-
-        rescaleSignalsValues.DataFrame(
+    if(is.null(theme.signal)){
+      theme.signal <-
+        ITRC::GetRescaledSignalTheme(
           model = model,
-          col.to.rescale = model$signal,
-          col.rescaled   = col.rescaled,
-          ...)
-      }
-
-    colors <-
-      GetLevelColors(
-        levels = as.numeric(signals.rescale.df[[col.rescaled]]),
-        levels.names = signals.rescale.df[[model$signal]],
-        ...
-      )
+          ...
+        )
+    }
+    signals.rescale.df <- theme.signal$signals.rescale.df
+    colors <- theme.signal$colors
+    col.rescaled <- theme.signal$col.rescaled
+    col.to.rescale <- theme.signal$col.to.rescale
 
     g.plot <-
       ggplot2::ggplot() +
       GetPlotTheme(...) +
       ggplot2::ggtitle(title_)
-
-
 
     x.itrc  <- "signal_rescaled"
     y.itrc <- "itrc"

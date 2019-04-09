@@ -7,6 +7,8 @@
 #' @param variable.to.compare, column of data
 #' @param data_raw_min, column of data
 #' @param ylab.right character, label of right y axes and legend title, default \code{"Signal levels"}
+#' @param theme.signal optional, object returned by \code{GetRescaledSignalTheme}
+#' @param signal.max ...
 #' @inheritDotParams plotITRCWaves
 # #' @inheritDotParams GetPlotTheme
 #' @details TODO important
@@ -17,7 +19,7 @@ plotITRCWaves.Comparison <-
     data,
     variable.to.compare,
     variable.to.rescale = variable.to.compare,
-    signals.rescale.df = NULL,
+    theme.signal = NULL,
     ylab.right = "Cellular Response",
     data_raw_min = 0,
     theme.data.points = list(
@@ -46,22 +48,23 @@ plotITRCWaves.Comparison <-
       stop("variable.to.compare must be defined")
     }
 
-    col.rescaled <- "signal_rescaled"
-    col.to.rescale <- model$signal
-    if(is.null(signals.rescale.df)){
-      signals.rescale.df <-
-        rescaleSignalsValues.DataFrame(
+    if(is.null(theme.signal)){
+      theme.signal <-
+        ITRC::GetRescaledSignalTheme(
           model = model,
-          col.to.rescale = col.to.rescale,
-          col.rescaled   = col.rescaled, #rescale.fun = rescale.fun)
-          ...)
+          ...
+        )
     }
+    signals.rescale.df <- theme.signal$signals.rescale.df
+    colors <- theme.signal$colors
+    col.rescaled <- theme.signal$col.rescaled
+    col.to.rescale <- theme.signal$col.to.rescale
 
     if(is.null(variable.to.rescale)){
       variable.to.rescale <- variable.rescaled
     }
     rescaled.list <-
-      rescaleDataToITRC.DataFrame(
+      ITRC::rescaleDataToITRC.DataFrame(
         model = model,
         data  = data,
         variable.to.compare = variable.to.compare,
@@ -78,7 +81,7 @@ plotITRCWaves.Comparison <-
       rescaled.list$data.rescaled
 
     #ylimits_ <- c(floor(ylimits_[1]), ceiling(ylimits_[2]))
-
+    print(signals.rescale.df)
     g.plot <-
       ITRC::plotITRCWaves(
         model = model,
