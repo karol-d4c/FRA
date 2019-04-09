@@ -159,6 +159,13 @@ plotITRCWaves <-
                    minimal and maximal numeric value")
           ylimits_ <- NULL
         }
+        ylimits_[2] <-
+          max(ylimits_[2],
+              (model$confusion.waves.polygon %>% dplyr::filter(position == max(position)))[["position"]])
+
+        ylimits_[1] <-
+          min(ylimits_[1],
+              (model$confusion.waves.polygon %>% dplyr::filter(position == min(position)))[["position"]])
       }
 
       if(!is.null(getScaleY)){
