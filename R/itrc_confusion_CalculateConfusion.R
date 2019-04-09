@@ -5,11 +5,20 @@
 #'
 CalculateConfusion <-
   function(model,
+           signal.max = NULL,
+           confusion.signal.max = signal.max,
            ...){
     signal.list <-
       (model$confusion.matrix %>%
          dplyr::distinct_(model$signal) %>%
          dplyr::arrange_(model$signal))[[model$signal]]
+    if(!is.null(confusion.signal.max) & length(signal.list) > 1){
+      signal.list <- signal.list[signal.list <= confusion.signal.max]
+    }
+    if(length(signal.list) <= 1){
+      stop("There must be at last two sigals to plot ITRC waves")
+    }
+
     model$confusion.waves <-
       CalculateConfusionWaves(
         model = model,

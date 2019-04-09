@@ -11,6 +11,7 @@ rescaleDataToITRC.Params <-
     # type_,
     # type.response_,
     data_raw_min = NULL,
+    signal.max = NULL,
     ...
   ){
     if(is.null(data)){
@@ -21,13 +22,34 @@ rescaleDataToITRC.Params <-
       variable.to.compare <- model$response[1]
     }
 
-    data_states_min <- (model$itrc %>%dplyr::filter(itrc == min(itrc)))[["itrc"]]
-    data_states_max <- (model$itrc %>%dplyr::filter(itrc == max(itrc)))[["itrc"]]
+    if(is.null(signal.max)){
+      signal.max <-
+        (model$itrc %>%
+           dplyr::filter_(paste(model$signal, "==",
+                                  "max(", model$signal, ")")))[[model$signal]]
+    }
+
+    data_states_min <- (model$itrc %>%
+                          dplyr::filter(itrc == min(itrc)))[["itrc"]]
+    data_states_max <- (model$itrc %>%
+                          dplyr::filter_(paste(model$signal, "<=", signal.max)) %>%
+                          dplyr::filter(itrc == max(itrc)))[["itrc"]]
 
     if(is.null(data_raw_min)){
-      data_raw_min <- (data %>% dplyr::filter_(paste("`", variable.to.compare, "`", "==", "min(", "`",variable.to.compare,"`", ")", sep = "")))[[variable.to.compare]]
+      data_raw_min <-
+        (data %>%
+           dplyr::filter_(
+             paste("`", variable.to.compare, "`", "==",
+                   "min(", "`",variable.to.compare,"`",
+                   ")", sep = "")))[[variable.to.compare]]
     }
-    data_raw_max <- (data %>% dplyr::filter_(paste("`", variable.to.compare, "`", "==", "max(", "`",variable.to.compare,"`", ")", sep = "")))[[variable.to.compare]]
+    data_raw_max <-
+      (data %>%
+         dplyr::filter_(paste(model$signal, "<=", signal.max)) %>%
+         dplyr::filter_(
+           paste("`", variable.to.compare, "`", "==",
+                 "max(", "`",variable.to.compare,"`",
+                 ")", sep = "")))[[variable.to.compare]]
     a <- (data_states_min - data_states_max)/(data_raw_min - data_raw_max)
     return(list(a = a,
                 b = data_states_max - a*data_raw_max))
@@ -75,7 +97,8 @@ rescaleDataToITRC.DataFrame <-
         model = model,
         data = data,
         variable.to.compare = variable.to.compare,
-        data_raw_min = data_raw_min
+        data_raw_min = data_raw_min,
+        ...
       )
 
     a <- rescale.params$a
