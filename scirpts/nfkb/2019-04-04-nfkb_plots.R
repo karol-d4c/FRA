@@ -2,11 +2,12 @@
 ### 2019-04-04 manuscript
 ### ###
 library(ITRC)
+library(future)
 
 
 #### initiaialisation ####
 force.run <- TRUE
-output.path <- "/media/knt/sdb2/KN/ITRC/resources/nfkb/testing/"
+output.path <- "/media/knt/sdb2/KN/ITRC/resources/nfkb/2019-04-11/"
 dir.create(path = output.path,
            recursive = TRUE)
 
@@ -21,9 +22,9 @@ response.ts =
     "60")
 response.tp18 =
   c("18")
-parallel_cores = 8
+parallel_cores = 4
 bootstrap = TRUE
-bootstrap.number = 8
+bootstrap.number = 128
 bootstrap.sample_size = 1000
 
 #### ITRC model ####
@@ -34,7 +35,8 @@ if(file.exists(path.model_ts)){
   model.ts <- readRDS(path.model_ts)
 }
 if(is.null(model.ts) | force.run){
-  model.ts <-
+  plan(multiprocess)
+  model.ts %<-%
     ITRC(
       data = ITRC::data.itrc.nfkb.all,
       signal = signal,

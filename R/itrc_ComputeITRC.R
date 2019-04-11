@@ -4,6 +4,7 @@ ComputeITRC <-
            cc_maxit = 100,
            lr_maxit = 1000,
            MaxNWts = 5000,
+           ITRC.DEBUG = FALSE,
            ...
   ) {
     signal.list <- (model$data %>%
@@ -35,6 +36,9 @@ ComputeITRC <-
     foreach::foreach(
       computation.task =
         compuatations.task.list) %dopar% {
+          if(ITRC.DEBUG){
+            print(computation.task)
+          }
           df.res <-
             GetLogRegParameters(
               data =
