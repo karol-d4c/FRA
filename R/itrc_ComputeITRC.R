@@ -10,10 +10,22 @@ ComputeITRC <-
                      dplyr::arrange_(model$signal) %>%
                      dplyr::distinct_(model$signal))[[model$signal]]
 
+    cols.list <-
+      list(
+        counts     = "counts",
+        counts.sum = "counts.sum",
+        # counts.total = "counts.total",
+        # counts.total.sum = "counts.total.sum",
+        max.signal = "max.signal",
+        bootstrap  = "bootstrap"
+      )
+
+    ###TODO add cols list to computation tasks
     compuatations.task.list <-
       GetComputationsTasks(
         signal.list = signal.list,
-        bootstrap.samples = model$bootstrap.samples)
+        bootstrap.samples = model$bootstrap.samples,
+        cols.list = cols.list)
 
     if(length(compuatations.task.list) < 1){
       stop("ITRC can be computed if number of signals is higher than 1")
@@ -65,15 +77,60 @@ ComputeITRC <-
             dplyr::group_by_(
               df.res.newdata$signal,
               model$class) %>%
-            dplyr::summarise(counts = n()) %>%
+            dplyr::summarise(
+              counts = n()
+              # .dots = setNames(
+              #   object = "n()",
+              #   nm = cols.list$counts)
+              ) %>%
             dplyr::rename_(
               .dots = setNames(nm = model$signal,
-                               object = df.res$signal)) ->
+                               object = df.res$signal)) %>%
+            dplyr::ungroup() ->
             df.confusion
 
-          df.confusion$max.signal <-
+          expand.grid(signal_ = computation.task$signal,
+                      class_ = computation.task$signal) %>%
+            dplyr::rename_(
+              .dots =
+                setNames(
+                  nm = c(model$signal, model$class),
+                  object = c("signal_", "class_")
+                )
+            ) ->
+            signal_class.df
+          signal_class.df$inner_join_id_ <- 1:nrow(signal_class.df)
+
+          signal_class.df %>%
+            dplyr::inner_join(df.confusion,
+                              by = c(model$signal,
+                                     model$class)) ->
+            signal_class.inner_join.df
+
+          signal_class.df[
+            signal_class.df$inner_join_id_[
+              -which(signal_class.df$inner_join_id_ %in%
+                signal_class.inner_join.df$inner_join_id_)
+            ],] %>%
+            dplyr::select(-inner_join_id_)->
+            signal_class.df
+          rm(signal_class.inner_join.df)
+
+          df.confusion %>%
+            rbind(
+             signal_class.df %>%
+                 dplyr::mutate_(
+                   .dots =
+                     setNames(
+                       nm = cols.list$counts,
+                       object = 0
+                     )
+                 )) ->
+                df.confusion
+
+          df.confusion[[cols.list$max.signal]] <-
             computation.task$max.signal
-          df.confusion$bootstrap <-
+          df.confusion[[cols.list$bootstrap]] <-
             computation.task$bootstrap
 
           return(df.confusion)
@@ -82,177 +139,25 @@ ComputeITRC <-
         what = rbind,
         args = .
       ) ->
-      model$confusion.table
+      model$specifictiy.bootstrap.table
     doParallel::registerDoParallel(parallel_cores)
 
+   model <-
+      CalculateConfusionTable(
+        model = model,
+        cols.list = cols.list,
+        signal.list = signal.list)
 
-    model$confusion.table %>%
-      dplyr::left_join(
-        (model$confusion.table %>%
-           dplyr::group_by_(
-             model$signal,
-             "max.signal",
-              "bootstrap") %>%
-           dplyr::summarise(
-             counts.sum = sum(counts))),
-        by = c(model$signal,
-               "max.signal",
-               "bootstrap" )) %>%
-      dplyr::group_by_(
-        model$signal,
-        model$class,
-        "max.signal",
-        "counts.sum"
-      ) %>%
-      dplyr::summarise(
-        prob = mean(counts/counts.sum),
-        prob.sd = sd(counts/counts.sum)
-      ) %>%
-      dplyr::select_(.dots= setdiff(names(.), "counts.sum")) %>%
-      dplyr::ungroup()  ->
-      model$confusion.matrix
+   model <-
+     CalculateConfusionMatrix(
+       model = model,
+       cols.list = cols.list)
 
-    model$confusion.matrix[1,] %>%
-      dplyr::mutate_all(.funs = function(x){0}) %>%
-      dplyr::mutate(prob = 1) %>%
-      rbind(model$confusion.matrix) ->
-      model$confusion.matrix
+    model <-
+      CalculateITRC(
+        model = model,
+        cols.list = cols.list
+      )
 
-    signal_class.df <-
-      expand.grid(signal.list,
-                  signal.list,
-                  signal.list)
-    colnames(signal_class.df)  <- c(model$signal,
-                                    model$class,
-                                    "max.signal")
-    signal_class.df %>%
-      dplyr::filter_(paste(model$signal, "<=", "max.signal")) %>%
-      dplyr::filter_(paste(model$class, "<=", "max.signal")) ->
-      signal_class.df
-    signal_class.df$inner_join_id_ <- 1:nrow(signal_class.df)
-
-    signal_class.df %>%
-      dplyr::inner_join(model$confusion.matrix,
-                        by = c(model$signal,
-                               model$class,
-                               "max.signal")) ->
-      signal_class.inner_join.df
-
-    signal_class.df[
-      signal_class.df$inner_join_id_[
-        -which(signal_class.df$inner_join_id_ %in%
-                 signal_class.inner_join.df$inner_join_id_)],] ->
-      signal_class.df
-
-    model$confusion.matrix %>%
-      rbind(
-        (signal_class.df %>%
-           dplyr::select_(
-             paste("c(",
-                   model$signal, ",",
-                   model$class, ",",
-                   "max.signal)")
-           ) %>%
-           dplyr::left_join(
-             y = model$confusion.matrix %>%
-               dplyr::group_by_("max.signal") %>%
-               dplyr::summarise(prob = 0, prob.sd = 0),
-             by = "max.signal"
-           ))) ->
-      model$confusion.matrix
-
-    model$confusion.table %>%
-      dplyr::left_join(
-        (model$confusion.table %>%
-           dplyr::group_by_(
-             model$signal,
-             "max.signal",
-             "bootstrap") %>%
-           dplyr::summarise(
-             counts.sum = sum(counts))),
-        by = c(model$signal,
-               "max.signal",
-               "bootstrap")) %>%
-      dplyr::filter_(
-        paste(model$signal,
-              "==",
-              model$class)
-      ) %>%
-      dplyr::mutate(
-        prob = counts/counts.sum
-      ) %>%
-      dplyr::select_(
-        .dots = setdiff(names(.),
-                        c(model$class,
-                          "counts",
-                          "counts.sum")))  %>%
-      dplyr::ungroup() ->
-      model$itrc
-
-    foreach::foreach(itrc.i = 1:nrow(model$itrc)) %do% {
-      itrc_ <- model$itrc[itrc.i,]
-      prob_ <-
-        (model$itrc %>%
-           dplyr::filter(
-             max.signal == itrc_[["max.signal"]],
-             bootstrap == itrc_[["bootstrap"]]) %>%
-           dplyr::filter_(
-             paste(model$signal,
-                   "<=",
-                   itrc_[[model$signal]])
-           ) %>%
-           dplyr::summarise(prob = sum(prob)))[["prob"]]
-    itrc_ %>%
-      dplyr::mutate(prob = prob_)
-    }  %>%
-      do.call(what = rbind,
-              args = .) %>%
-      dplyr::group_by_(
-        model$signal,
-        "max.signal"
-      ) %>%
-      dplyr::summarise(
-        prob.mean = mean(prob),
-        prob.sd = sd(prob)
-      ) %>%
-      dplyr::arrange_("max.signal",
-                      model$signal) ->
-    model$itrc
-
-    model$itrc[1,] %>%
-      dplyr::mutate_all(.funs = function(x){0}) %>%
-      dplyr::mutate(prob.mean = 1) %>%
-      rbind(model$itrc) %>%
-      dplyr::ungroup() ->
-      model$itrc
-
-    model$itrc %>%
-      dplyr::group_by_(
-        model$signal
-      ) %>%
-      dplyr::summarise(
-        itrc = max(prob.mean)
-      ) ->
-      model$itrc
-
-    model$confusion.matrix %>%
-      dplyr::arrange(as.numeric(class)) %>%
-      dplyr::arrange_(paste("as.numeric(", model$signal, ")")) %>%
-      dplyr::filter(max.signal == max(max.signal)) %>%
-      reshape2::dcast(
-        formula = paste( model$signal, "~", model$class),
-        value.var = "prob") ->
-      confusion.matrix
-    confusion.matrix[which(is.na(confusion.matrix), arr.ind = TRUE)] <- 0
-    signals <- confusion.matrix[,1]
-    confusion.matrix <- confusion.matrix[,-1]
-    confusion.matrix <-
-      confusion.matrix[
-        order(as.numeric(signals)),
-        order(as.numeric(colnames(confusion.matrix)))]
-    rownames(confusion.matrix) <-
-      signals[order(as.numeric(signals))]
-    model$confusion.matrix.wide <-
-      confusion.matrix
     return(model)
   }

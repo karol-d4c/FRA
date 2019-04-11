@@ -9,7 +9,7 @@ CalculateConfusion <-
            confusion.signal.max = signal.max,
            ...){
     signal.list <-
-      (model$confusion.matrix %>%
+      (model$confusion.table %>%
          dplyr::distinct_(model$signal) %>%
          dplyr::arrange_(model$signal))[[model$signal]]
     if(!is.null(confusion.signal.max) & length(signal.list) > 1){

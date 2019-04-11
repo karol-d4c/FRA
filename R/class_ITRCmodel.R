@@ -85,9 +85,12 @@ print.ITRCModel <-
         "~",
         paste(x$response, collapse = "+"),
         "\n")
-
+    cat("itrc :", "\n")
+    itrc_vec <- x$itrc$itrc
+    names(itrc_vec) <-x$itrc[[x$signal]]
+    print(round(itrc_vec, digits = 2))
     cat("confusion matrix :", "\n")
-    print(round(as.matrix(x$confusion.matrix.wide), digits = 2))
+    print(round(as.matrix(x$confusion.matrix), digits = 2))
     # print(
     #   format(
     #     print(round(as.matrix(x$confusion.matrix.wide), digits = 2)),
@@ -110,6 +113,6 @@ format.ITRCModel <-
             "~",
             paste(model$response, collapse = "+")),
       "\n",
-      "confusion matrix 12312\n",
-      format(as.matrix(model$confusion.matrix.wide)))
+      "confusion matrix :\n",
+      format(as.matrix(model$confusion.matrix)))
   }

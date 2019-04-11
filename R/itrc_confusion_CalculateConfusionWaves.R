@@ -12,7 +12,7 @@ CalculateConfusionWaves <-
     ...){
 
     foreach::foreach(signal_ = signal.list) %do% {
-      model$confusion.matrix %>%
+      model$confusion.table %>%
         dplyr::filter_("max.signal == max(max.signal)") %>%
         dplyr::filter_(
           paste(model$signal, "==", signal_)) %>%
