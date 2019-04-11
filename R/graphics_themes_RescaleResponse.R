@@ -26,30 +26,30 @@ rescaleDataToITRC.Params <-
       signal.max <-
         (model$itrc %>%
            dplyr::filter_(paste(model$signal, "==",
-                                  "max(", model$signal, ")")))[[model$signal]]
+                                "max(", model$signal, ")")))[[model$signal]]
     }
 
-    data_states_min <- (model$itrc %>%
-                          dplyr::filter(itrc == min(itrc)))[["itrc"]]
-    data_states_max <- (model$itrc %>%
-                          dplyr::filter_(paste(model$signal, "<=", signal.max)) %>%
-                          dplyr::filter(itrc == max(itrc)))[["itrc"]]
+    data_states_min <- min((model$itrc %>%
+                              dplyr::filter(itrc == min(itrc)))[["itrc"]])
+    data_states_max <- max((model$itrc %>%
+                              dplyr::filter_(paste(model$signal, "<=", signal.max)) %>%
+                              dplyr::filter(itrc == max(itrc)))[["itrc"]])
 
     if(is.null(data_raw_min)){
       data_raw_min <-
-        (data %>%
-           dplyr::filter_(
-             paste("`", variable.to.compare, "`", "==",
-                   "min(", "`",variable.to.compare,"`",
-                   ")", sep = "")))[[variable.to.compare]]
+        min((data %>%
+               dplyr::filter_(
+                 paste("`", variable.to.compare, "`", "==",
+                       "min(", "`",variable.to.compare,"`",
+                       ")", sep = "")))[[variable.to.compare]])
     }
     data_raw_max <-
-      (data %>%
-         dplyr::filter_(paste(model$signal, "<=", signal.max)) %>%
-         dplyr::filter_(
-           paste("`", variable.to.compare, "`", "==",
-                 "max(", "`",variable.to.compare,"`",
-                 ")", sep = "")))[[variable.to.compare]]
+      max((data %>%
+             dplyr::filter_(paste(model$signal, "<=", signal.max)) %>%
+             dplyr::filter_(
+               paste("`", variable.to.compare, "`", "==",
+                     "max(", "`",variable.to.compare,"`",
+                     ")", sep = "")))[[variable.to.compare]])
     a <- (data_states_min - data_states_max)/(data_raw_min - data_raw_max)
     return(list(a = a,
                 b = data_states_max - a*data_raw_max))
@@ -64,51 +64,51 @@ rescaleDataToITRC.Params <-
 #' @export
 rescaleDataToITRC.DataFrame <-
   function(
-  model,
-  data = NULL,
-  variable.to.compare = NULL,
-  variable.rescaled = NULL,
-  variable.to.rescale = NULL,
-  # logStim.0 = 0.001,
-  # rcc.waves.logStim.0 = NULL,
-  # logfun = log,
-  data_raw_min = NULL,
-  a = NULL,
-  b = NULL,
-  ...
-){
+    model,
+    data = NULL,
+    variable.to.compare = NULL,
+    variable.rescaled = NULL,
+    variable.to.rescale = NULL,
+    # logStim.0 = 0.001,
+    # rcc.waves.logStim.0 = NULL,
+    # logfun = log,
+    data_raw_min = NULL,
+    a = NULL,
+    b = NULL,
+    ...
+  ){
     if(is.null(data)){
       stop("data must be defined")
     } else if(!("data.frame" %in% class(data))){
-        stop("data should be data.frame or data.table")
-      }
+      stop("data should be data.frame or data.table")
+    }
 
     if(is.null(variable.to.compare)){
       stop("variable.to.compare must be defined")
     } else if(length(variable.to.compare) != 1 |
-       !(variable.to.compare %in% colnames(data))
+              !(variable.to.compare %in% colnames(data))
     ) {
       stop("variable.to.compare must be colname of data.frame data")
     }
 
-  if(is.null(a) | is.null(b)){
-    rescale.params <-
-      rescaleDataToITRC.Params(
-        model = model,
-        data = data,
-        variable.to.compare = variable.to.compare,
-        data_raw_min = data_raw_min,
-        ...
-      )
+    if(is.null(a) | is.null(b)){
+      rescale.params <-
+        rescaleDataToITRC.Params(
+          model = model,
+          data = data,
+          variable.to.compare = variable.to.compare,
+          data_raw_min = data_raw_min,
+          ...
+        )
 
-    a <- rescale.params$a
-    b <- rescale.params$b
-  }
+      a <- rescale.params$a
+      b <- rescale.params$b
+    }
 
-  if(is.null(variable.rescaled)){
-    variable.rescaled <- variable.to.compare
-    variable.to.rescale <- variable.to.compare
-  }
+    if(is.null(variable.rescaled)){
+      variable.rescaled <- variable.to.compare
+      variable.to.rescale <- variable.to.compare
+    }
 
 
     data %>%
@@ -123,11 +123,11 @@ rescaleDataToITRC.DataFrame <-
       #dplyr::mutate(type = "rescaled") ->
       data.rescaled
 
-  return(
-    list(
-      a = a,
-      b = b,
-      data.rescaled = data.rescaled
+    return(
+      list(
+        a = a,
+        b = b,
+        data.rescaled = data.rescaled
+      )
     )
-  )
-}
+  }
