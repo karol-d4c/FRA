@@ -26,7 +26,8 @@ ComputeITRC <-
       GetComputationsTasks(
         signal.list = signal.list,
         bootstrap.samples = model$bootstrap.samples,
-        cols.list = cols.list)
+        cols.list = cols.list,
+        ...)
 
     if(length(compuatations.task.list) < 1){
       stop("ITRC can be computed if number of signals is higher than 1")
@@ -60,9 +61,12 @@ ComputeITRC <-
                 returnBootstrapData(
                   model = model,
                   bootstrap_ =
-                    model$bootstrap.samples[
-                      -which(computation.task$bootstrap ==
-                               computation.task$bootstrap)]),
+                    computation.task$bootstrap.test
+                    # model$bootstrap.samples[
+                    #   -which(model$bootstrap.samples ==
+                    #            computation.task$bootstrap
+                    #            )]
+                    ),
               model = model,
               signal.list = computation.task$signal)
 
