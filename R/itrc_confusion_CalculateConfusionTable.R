@@ -9,7 +9,8 @@ CalculateConfusionTable <-
        dplyr::group_by_(
          model$signal,
          "max.signal",
-         "bootstrap") %>%
+         "bootstrap",
+         cols.list$computation.task) %>%
        dplyr::summarise(
          counts.sum = sum(counts)))
 
@@ -19,7 +20,8 @@ CalculateConfusionTable <-
            dplyr::group_by_(
              model$signal,
              cols.list$max.signal,
-             cols.list$bootstrap) %>%
+             cols.list$bootstrap,
+             cols.list$computation.task) %>%
            dplyr::summarise(
              counts.sum = sum(counts)
              # .dots =
@@ -30,7 +32,8 @@ CalculateConfusionTable <-
              )),
         by = c(model$signal,
                cols.list$max.signal,
-               cols.list$bootstrap )) %>%
+               cols.list$bootstrap,
+               cols.list$computation.task)) %>%
       dplyr::mutate(
         prob.bootstrap = counts/counts.sum
       ) ->

@@ -39,6 +39,7 @@ getScaleY.ITRCComparison <-
     }
     a <- scaleY.a
     b <- scaleY.b
+    if(scaleY.a != 0){
     ggplot2::scale_y_continuous(
       sec.axis =
         eval(substitute(expr =
@@ -52,4 +53,19 @@ getScaleY.ITRCComparison <-
                              bb = b))),
       breaks = ybreaks,
       limits = ylimits)
+    } else {
+      ggplot2::scale_y_continuous(
+        sec.axis =
+          eval(substitute(expr =
+                            ggplot2::sec_axis(trans = ~ (.-bb),
+                                              name = ylab.right,
+                                              breaks = (ybreaks-b),
+                                              labels = round((ybreaks-b),
+                                                             digits = digits)),
+                          #rep("", times= length(round((graphics.args.waves$ybreaks-b)/a)))),
+                          list(aa = a,
+                               bb = b))),
+        breaks = ybreaks,
+        limits = ylimits)
+    }
   }

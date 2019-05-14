@@ -4,15 +4,15 @@
 \alias{rescaleDataToITRC.Params}
 \title{rescaleDataToITRC.Params}
 \usage{
-rescaleDataToITRC.Params(model = NULL, data, variable_, data_raw_min,
-  ...)
+rescaleDataToITRC.Params(model = NULL, data, variable.to.compare,
+  data_raw_min = NULL, ...)
 }
 \arguments{
 \item{model}{ITRCModel}
 
 \item{data}{data to rescale}
 
-\item{variable_}{variable_ TODO}
+\item{variable.to.compare}{variable.to.compare TODO}
 
 \item{data_raw_min}{data_raw_min 0 or min of data}
 }

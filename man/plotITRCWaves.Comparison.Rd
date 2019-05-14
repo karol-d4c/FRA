@@ -4,12 +4,24 @@
 \alias{plotITRCWaves.Comparison}
 \title{plotITRCWaves.Comparison}
 \usage{
-plotITRCWaves.Comparison(data, variable.to.compare, ...)
+plotITRCWaves.Comparison(model, data, variable.to.compare,
+  variable.to.rescale = variable.to.compare, theme.signal = NULL,
+  ylab.right = "Cellular Response", data_raw_min = 0,
+  theme.data.points = list(color = "black"),
+  theme.data.line = list(color = "black"), ...)
 }
 \arguments{
+\item{model}{ITRCModel object return by ITRC function}
+
 \item{data, }{column "model$signal" and}
 
 \item{variable.to.compare, }{column of data}
+
+\item{theme.signal}{optional, object returned by \code{GetRescaledSignalTheme}}
+
+\item{ylab.right}{character, label of right y axes and legend title, default \code{"Signal levels"}}
+
+\item{data_raw_min, }{column of data}
 
 \item{...}{Arguments passed on to \code{plotITRCWaves}
 \describe{
@@ -19,6 +31,7 @@ plotITRCWaves.Comparison(data, variable.to.compare, ...)
   \item{ylab_}{character, label of y axes and legend title, default \code{"Signal levels"}}
   \item{ylimits_}{TRUE FALSE or vector of minimum and maximum of y axes}
   \item{fill.guide_}{logical, specify if legend should be displayed}
+  \item{theme.signal}{optional, object returned by \code{GetRescaledSignalTheme}}
 }}
 }
 \description{
