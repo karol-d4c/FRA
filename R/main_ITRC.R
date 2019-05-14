@@ -77,6 +77,16 @@ ITRC <-
         model = model,
         parallel_cores =
           parallel_cores,
+        rc_type = "mean",
+
+        ...)
+
+    model <-
+      ComputeRC(
+        model = model,
+        parallel_cores =
+          parallel_cores,
+        rc_type = "median",
         ...)
     return(model)
   }

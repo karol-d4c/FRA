@@ -18,17 +18,19 @@ ComputeITRC <-
         # counts.total = "counts.total",
         # counts.total.sum = "counts.total.sum",
         max.signal = "max.signal",
-        bootstrap  = "bootstrap"
+        bootstrap  = "bootstrap",
+        computation.task  = "computation"
       )
 
     ###TODO add cols list to computation tasks
     compuatations.task.list <-
       GetComputationsTasks(
         signal.list = signal.list,
-        bootstrap.samples = model$bootstrap.samples,
-        cols.list = cols.list,
+        computations.bootstrap.samples = model$bootstrap.samples,
+        #bootstrap.test.sample = TRUE)
         ...)
 
+    model$compuatations.task.list <- compuatations.task.list
     if(length(compuatations.task.list) < 1){
       stop("ITRC can be computed if number of signals is higher than 1")
     }
@@ -37,9 +39,6 @@ ComputeITRC <-
     foreach::foreach(
       computation.task =
         compuatations.task.list) %dopar% {
-          if(ITRC.DEBUG){
-            print(computation.task)
-          }
           df.res <-
             GetLogRegParameters(
               data =
@@ -140,6 +139,8 @@ ComputeITRC <-
             computation.task$max.signal
           df.confusion[[cols.list$bootstrap]] <-
             computation.task$bootstrap
+          df.confusion[[cols.list$computation.task]] <-
+            computation.task$id
 
           return(df.confusion)
         } %>%

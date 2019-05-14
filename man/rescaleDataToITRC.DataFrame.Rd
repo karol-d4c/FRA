@@ -4,8 +4,9 @@
 \alias{rescaleDataToITRC.DataFrame}
 \title{rescaleDataToITRC.DataFrame}
 \usage{
-rescaleDataToITRC.DataFrame(model, data = NULL, variable_ = NULL,
-  variable.rescaled_ = NULL, data_raw_min = NULL, a = NULL,
+rescaleDataToITRC.DataFrame(model, data = NULL,
+  variable.to.compare = NULL, variable.rescaled = NULL,
+  variable.to.rescale = NULL, data_raw_min = NULL, a = NULL,
   b = NULL, ...)
 }
 \arguments{
@@ -13,15 +14,15 @@ rescaleDataToITRC.DataFrame(model, data = NULL, variable_ = NULL,
 
 \item{data}{data to rescale}
 
-\item{variable_}{variable_ TODO}
+\item{variable.to.compare}{variable.to.compare TODO}
 
-\item{variable.rescaled_}{variable.rescaled_ TODO}
+\item{variable.rescaled}{variable.rescaled TODO}
 
 \item{...}{Arguments passed on to \code{rescaleDataToITRC.Params}
 \describe{
   \item{model}{ITRCModel}
   \item{data}{data to rescale}
-  \item{variable_}{variable_ TODO}
+  \item{variable.to.compare}{variable.to.compare TODO}
   \item{data_raw_min}{data_raw_min 0 or min of data}
 }}
 }

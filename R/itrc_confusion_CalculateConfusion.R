@@ -18,11 +18,15 @@ CalculateConfusion <-
     if(length(signal.list) <= 1){
       stop("There must be at last two sigals to plot ITRC waves")
     }
+    if(is.null(confusion.signal.max)){
+      confusion.signal.max <- max(signal.list)
+    }
 
     model$confusion.waves <-
       CalculateConfusionWaves(
         model = model,
-        signal.list = signal.list)
+        signal.list = signal.list,
+        signal.max  = confusion.signal.max)
     model$confusion.waves.polygon <-
       CalculateConfusionWavesPolygons(
         model = model,

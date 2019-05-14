@@ -7,6 +7,8 @@ ComputeRC <-
     if(is.null(model)){
       return()
     }
+    rc.name <- paste("rc", rc_type, sep = "_")
+    rc.sum.name <- paste("rc.sum", rc_type, sep = "_")
     signal.list <- (model$data %>%
                       dplyr::arrange_(model$signal) %>%
                       dplyr::distinct_(model$signal))[[model$signal]]
@@ -33,16 +35,16 @@ ComputeRC <-
         what = rbind,
         args = .
       ) ->
-      model$rc
+      model[[rc.name]]
     doParallel::registerDoParallel(parallel_cores)
 
-    model$rc %>%
+    model[[rc.name]] %>%
       dplyr::group_by_(model$signal)%>%
       dplyr::summarise_(
         .dots =
           setNames(
             object = paste(rc_type, "(`", model$response, "`)", sep = ""),
             nm = model$response)) ->
-      model$rc.sum
+      model[[rc.sum.name]]
     return(model)
   }

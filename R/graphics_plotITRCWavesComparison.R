@@ -91,6 +91,7 @@ plotITRCWaves.Comparison <-
         scaleY.a = rescaled.list$a,
         scaleY.b = rescaled.list$b,
         ylab.right = ylab.right,
+        theme.signal = theme.signal,
         ...
       )
     if(!is.null(theme.data.points)){

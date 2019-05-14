@@ -7,7 +7,7 @@
 plotITRCWaves(model, title_ = "Information Theoretic Response Curve",
   xlab_ = "States number", ylab_ = "Signal levels",
   fill.guide_ = "legend", ylimits_ = TRUE, alpha_ = 0.5,
-  signals.rescale.df = NULL, ...)
+  getScaleY = getScaleY.ITRC, theme.signal = NULL, ...)
 }
 \arguments{
 \item{model}{ITRCModel object return by ITRC function}
@@ -21,6 +21,8 @@ plotITRCWaves(model, title_ = "Information Theoretic Response Curve",
 \item{fill.guide_}{logical, specify if legend should be displayed}
 
 \item{ylimits_}{TRUE FALSE or vector of minimum and maximum of y axes}
+
+\item{theme.signal}{optional, object returned by \code{GetRescaledSignalTheme}}
 
 \item{...}{Arguments passed on to \code{rescaleSignalsValues}
 \describe{

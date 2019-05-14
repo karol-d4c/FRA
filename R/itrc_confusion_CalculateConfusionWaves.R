@@ -9,11 +9,16 @@ CalculateConfusionWaves <-
   function(
     model,
     signal.list,
+    signal.max = NULL,
     ...){
+
+    if(is.null(signal.max)){
+      signal.max <- "max(max.signal)"
+    }
 
     foreach::foreach(signal_ = signal.list) %do% {
       model$confusion.table %>%
-        dplyr::filter_("max.signal == max(max.signal)") %>%
+        dplyr::filter_(paste("max.signal == ", signal.max)) %>%
         dplyr::filter_(
           paste(model$signal, "==", signal_)) %>%
         dplyr::mutate_(if_else_signal = paste("as.numeric(", model$signal, ")"),

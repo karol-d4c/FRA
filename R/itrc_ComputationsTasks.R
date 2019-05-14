@@ -1,15 +1,17 @@
 GetComputationsTasks <-
   function(
     signal.list,
-    bootstrap.samples,
-    bootstrap.test.sample = FALSE,
+    computations.bootstrap.samples,
+    computations.bootstrap.test.sample_ = FALSE,
+    computations.bootstrap.test.number_ = NULL,
     ...
   ){
+#    print(as.list(match.call()))
+
     GetComputationsSignalTasks <-
       function(
         signal.list,
-        ...
-      ){
+        ...){
 
         foreach::foreach(signal_ = signal.list) %do% {
           computation_task <- signal.list[which(signal.list <= signal_)]
@@ -29,26 +31,35 @@ GetComputationsTasks <-
         }
         return(computation_task.list)
       }
+
     computation.signal.task.list <-
       GetComputationsSignalTasks(signal.list = signal.list)
-    if(!bootstrap.test.sample){
-      foreach::foreach(bootstrap_ = bootstrap.samples) %do% {
+    if(!computations.bootstrap.test.sample_){
+      foreach::foreach(bootstrap_ = computations.bootstrap.samples) %do% {
         foreach::foreach(computation.signal.task = computation.signal.task.list) %do% {
           computation.signal.task$bootstrap <- bootstrap_
           computation.signal.task$bootstrap.test <-
-            bootstrap.samples[-which(bootstrap.samples == bootstrap_)]
+            computations.bootstrap.samples[-which(computations.bootstrap.samples == bootstrap_)]
           return(computation.signal.task)
         } %>%
           return()
       } %>%
-        unlist(., recursive = FALSE)  %>%
-        return()
+        unlist(., recursive = FALSE)  ->
+        compuatations.task.list
     } else {
-      foreach::foreach(bootstrap_ = bootstrap.samples) %do% {
+      foreach::foreach(bootstrap_ = computations.bootstrap.samples) %do% {
         foreach::foreach(computation.signal.task = computation.signal.task.list) %do% {
           computation.signal.task$bootstrap <- bootstrap_
-          foreach::foreach(bootstrap.test_ =
-                             bootstrap.samples[-which(bootstrap.samples == bootstrap_)]) %do% {
+          computations.bootstrap.samples.test <- computations.bootstrap.samples[-which(computations.bootstrap.samples == bootstrap_)]
+          if(!is.null(computations.bootstrap.test.number_)){
+            computations.bootstrap.samples.test <-
+              computations.bootstrap.samples.test[
+                sample.int(n = length(computations.bootstrap.samples.test),
+                           size = computations.bootstrap.test.number_,
+                           replace = TRUE)]
+          }
+          foreach::foreach(bootstrap.test_ = computations.bootstrap.samples.test
+                             ) %do% {
                                computation.signal.task$bootstrap.test <- bootstrap.test_
                                return(computation.signal.task)
                              } %>%
@@ -56,7 +67,12 @@ GetComputationsTasks <-
         } %>%
           unlist(., recursive = FALSE)
       } %>%
-        unlist(., recursive = FALSE) %>%
-        return()
+        unlist(., recursive = FALSE) ->
+        compuatations.task.list
     }
+    foreach(compuatations.task.i = 1:length(compuatations.task.list)) %do% {
+      compuatations.task <- compuatations.task.list[[compuatations.task.i]]
+      compuatations.task$id <- compuatations.task.i
+      compuatations.task
+    } %>% return()
 }

@@ -21,7 +21,9 @@ CalculateITRC <-
         (confusion.bootstrap.diagonal.table %>%
            dplyr::filter(
              max.signal == itrc_[["max.signal"]],
-             bootstrap ==  itrc_[["bootstrap"]]) %>%
+             bootstrap ==  itrc_[["bootstrap"]],
+             computation ==  itrc_[["computation"]]
+             ) %>%
            dplyr::filter_(
              paste(model$signal,
                    "<=",
