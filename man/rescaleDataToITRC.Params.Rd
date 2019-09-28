@@ -5,7 +5,7 @@
 \title{rescaleDataToITRC.Params}
 \usage{
 rescaleDataToITRC.Params(model = NULL, data, variable.to.compare,
-  data_raw_min = NULL, ...)
+  data_raw_min = NULL, signal.max = NULL, ...)
 }
 \arguments{
 \item{model}{ITRCModel}

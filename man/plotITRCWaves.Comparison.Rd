@@ -33,6 +33,8 @@ plotITRCWaves.Comparison(model, data, variable.to.compare,
   \item{fill.guide_}{logical, specify if legend should be displayed}
   \item{theme.signal}{optional, object returned by \code{GetRescaledSignalTheme}}
 }}
+
+\item{signal.max}{...}
 }
 \description{
 This functions return ggplot2 figure that visualise Information

@@ -2,12 +2,16 @@
 ### Overlapping model
 ### ###
 #### Library ####
-source("scirpts/models/overlapping/model_Manuscript1D.R")
+source("scirpts/models/model_Manuscript1D.R")
 library(data.table)
 library(dplyr)
+library(foreach)
+library(ITRC)
+
 #### Model initialisation ####
 model.name <- "manuscript1d"
 output.path <- "/media/knt/sdb2/KN/ITRC/resources/model/overlapping/testing/"
+output.path <- "resources/model/overlapping/testing/"
 
 dir.create(path = output.path, recursive = TRUE)
 #### model parameters ####
@@ -23,7 +27,7 @@ data.model.overlapping <-
   sample_ModelManuscript1D(
     output.path = output.path,
     time = 1,
-    n = 50000,
+    n = 10000,
     stim.list = stim.list.rcc#,
     # alpha = alpha_,
     # beta = beta_,
@@ -33,11 +37,12 @@ data.model.overlapping <-
 signal <- "Stim"
 sample <- "CellID2"
 response <- "intensity"
-parallel_cores = 8
+parallel_cores = 2
 bootstrap = TRUE
 bootstrap.number = 16
 bootstrap.sample_size = 1000
 path.model <- paste(output.path, "model.rds", sep = "/")
+model.overlapping <- NULL
 if(file.exists(path.model)){
   model.overlapping <- readRDS(path.model)
 }

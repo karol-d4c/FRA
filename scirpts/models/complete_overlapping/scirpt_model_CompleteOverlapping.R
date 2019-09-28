@@ -10,6 +10,7 @@ library(ITRC)
 #### Model initialisation ####
 model.name <- "manuscript1d"
 output.path <- "/media/knt/sdb2/KN/ITRC/resources/model/complete_overlapping/2019-04-11-2/"
+output.path <- "resources/model/complete_overlapping/2019-04-11-2/"
 
 dir.create(path = output.path, recursive = TRUE)
 ITRC.DEBUG <- TRUE
@@ -50,11 +51,12 @@ g
 signal <- "Stim"
 sample <- "CellID2"
 response <- "intensity"
-parallel_cores = 6
+parallel_cores = 2
 bootstrap = TRUE
-bootstrap.number = 512
+bootstrap.number = 8
 bootstrap.sample_size = 1000
 path.model <- paste(output.path, "model.rds", sep = "/")
+bootstrap.test.sample <- TRUE
 if(file.exists(path.model)){
   model <- readRDS(path.model)
 }
@@ -71,7 +73,8 @@ if(is.null(model) | force.run){
       bootstrap.number = bootstrap.number,
       bootstrap = bootstrap,
       bootstrap.sample_size = bootstrap.sample_size,
-      ITRC.DEBUG = ITRC.DEBUG
+      ITRC.DEBUG = ITRC.DEBUG,
+      bootstrap.test.sample = bootstrap.test.sample
     )
 
   saveRDS(object = model,

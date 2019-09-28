@@ -4,7 +4,8 @@
 \alias{CalculateConfusion}
 \title{CalculateConfuison}
 \usage{
-CalculateConfusion(model, ...)
+CalculateConfusion(model, signal.max = NULL,
+  confusion.signal.max = signal.max, ...)
 }
 \description{
 This function calculates confusiuon waves from confusion matrix.
