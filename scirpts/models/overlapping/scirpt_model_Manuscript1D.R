@@ -3,6 +3,7 @@
 ### ###
 #### Library ####
 source("scirpts/models/model_Manuscript1D.R")
+library(ITRC)
 library(data.table)
 library(dplyr)
 library(foreach)
@@ -27,19 +28,18 @@ data.model.overlapping <-
   sample_ModelManuscript1D(
     output.path = output.path,
     time = 1,
-    n = 10000,
-    stim.list = stim.list.rcc#,
-    # alpha = alpha_,
-    # beta = beta_,
-    # gamma = gamma_
-    )
-
+    n = 1000000,
+    stim.list = stim.list.rcc,
+    alpha = alpha_,
+    beta = beta_,
+    gamma = gamma_
+)
 signal <- "Stim"
 sample <- "CellID2"
 response <- "intensity"
 parallel_cores = 2
 bootstrap = TRUE
-bootstrap.number = 16
+bootstrap.number = 64
 bootstrap.sample_size = 1000
 path.model <- paste(output.path, "model.rds", sep = "/")
 model.overlapping <- NULL
@@ -56,7 +56,9 @@ model.overlapping <-
     parallel_cores = parallel_cores,
     bootstrap.number = bootstrap.number,
     bootstrap = bootstrap,
-    bootstrap.sample_size = bootstrap.sample_size
+    bootstrap.sample_size = bootstrap.sample_size,
+    bootstrap.test.sample = TRUE,
+    bootstrap.test.number = 4
   )
 saveRDS(object = model.overlapping,
         file = paste(output.path, "model.rds", sep = "/")
@@ -74,18 +76,18 @@ theme.signal.reduced <- theme.signal
 theme.signal$signals.rescale.df %>%
   dplyr::filter(Stim <= 1) ->
   theme.signal.reduced$signals.rescale.df
-
+ylim_ <- c(0,4)
 g.model.overlapping <-
   ITRC::plotITRCWaves(
     model = model.overlapping,
     theme.signal = theme.signal.reduced,
-    confusion.signal.max = 1)
+    confusion.signal.max = 1, ylimits_ = ylim_)
 
 ggplot2::ggsave(
   filename = paste(output.path, "model_overlapping_itrc.pdf", sep = "/"),
   plot = g.model.overlapping,
-  width = 8,
-  height = 6,
+  width = 6,
+  height = 3,
   useDingbats = FALSE
 )
 
@@ -107,10 +109,12 @@ ggplot2::ggsave(
   useDingbats = FALSE
 )
 
+g.xlim <- c(0, 50)
+g.ylim <- c(0, 0.6)
 stim.list.rcc <- c(0,0.1,1)
 g <-
   ggplot2::ggplot(
-    data = model$data %>%
+    data = data.model.overlapping %>%
       dplyr::filter(Stim %in%
                       stim.list.rcc) %>%
       dplyr::left_join(theme.signal$signals.rescale.df),
@@ -129,14 +133,15 @@ g <-
   ggplot2::scale_color_manual(
     guide = FALSE,
     name = "Stimulation level",
-    values = theme.signal$colors)
+    values = theme.signal$colors) +
+  ggplot2::coord_cartesian(xlim = g.xlim, ylim = g.ylim)
 g
 
 ggplot2::ggsave(
   filename = paste(output.path, "model_overlapping.pdf", sep = "/"),
   plot = g,
-  width = 8,
-  height = 6,
+  width = 6,
+  height = 3,
   useDingbats = FALSE
 )
 

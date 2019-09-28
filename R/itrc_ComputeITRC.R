@@ -27,7 +27,7 @@ ComputeITRC <-
       GetComputationsTasks(
         signal.list = signal.list,
         computations.bootstrap.samples = model$bootstrap.samples,
-        #bootstrap.test.sample = TRUE)
+        #bootstrap.test.sample = TRUE, bootstrap.test.sample = TRUE,bootstrap.test.number = 4)
         ...)
 
     model$compuatations.task.list <- compuatations.task.list

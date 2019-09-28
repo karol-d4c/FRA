@@ -7,7 +7,7 @@ library(future)
 
 #### initiaialisation ####
 force.run <- TRUE
-output.path <- "/media/knt/sdb2/KN/ITRC/resources/nfkb/2019-04-11/"
+output.path <- "/media/knt/sdb2/KN/ITRC/resources/nfkb/2019-04-12/"
 dir.create(path = output.path,
            recursive = TRUE)
 
@@ -22,9 +22,9 @@ response.ts =
     "60")
 response.tp18 =
   c("18")
-parallel_cores = 4
+parallel_cores = 8
 bootstrap = TRUE
-bootstrap.number = 128
+bootstrap.number = 64
 bootstrap.sample_size = 1000
 
 #### ITRC model ####
@@ -35,8 +35,8 @@ if(file.exists(path.model_ts)){
   model.ts <- readRDS(path.model_ts)
 }
 if(is.null(model.ts) | force.run){
-  plan(multiprocess)
-  model.ts %<-%
+#  plan(multiprocess)
+  model.ts <-
     ITRC(
       data = ITRC::data.itrc.nfkb.all,
       signal = signal,
@@ -45,7 +45,9 @@ if(is.null(model.ts) | force.run){
       parallel_cores = parallel_cores,
       bootstrap.number = bootstrap.number,
       bootstrap = bootstrap,
-      bootstrap.sample_size = bootstrap.sample_size
+      bootstrap.sample_size = bootstrap.sample_size,
+      bootstrap.test.sample = TRUE,
+      bootstrap.test.number = 4
     )
   saveRDS(object = model.ts,
           file = path.model_ts)
@@ -91,19 +93,45 @@ g.nfkb.ts <-
   ITRC::plotITRCWaves(
     model = model.ts)
 
+model.ts <-
+  ComputeRC(model.ts,
+           parallel_cores = 4,
+           rc_type = "median")
+
+model.ts <-
+  ComputeRC(model.ts,
+            parallel_cores = 4,
+            rc_type = "median") <-
+  ComputeRC(model.ts,
+            parallel_cores = 4,
+            rc_type = "mean")
+
+model.ts$rc.sum_mean %>%
+  dplyr::select_("signal", "`18`") %>%
+  dplyr::rename(mean = `18`) %>%
+  dplyr::left_join(
+    model.ts$rc.sum_median %>%
+      dplyr::select_("signal", "`18`") %>%
+      dplyr::rename(median = `18`),
+    by = "signal"
+  ) ->
+  rc.sum
+
+
+
+
 g.nfkb.ts.comparison <-
   ITRC::plotITRCWaves.Comparison(
     model = model.ts,
-    data = model.ts$rc.sum,
+    data = rc.sum,
     theme.signal  = theme.signal,
-    variable.to.compare = "18",
-    variable.to.rescale = "18",
+    variable.to.compare = "mean",
+    variable.to.rescale = c("mean", "median"),
     pallete.args = list(option = "B", end = 0.75, begin = 0.25),
     theme.data.line = list(
       color = "red",
       linetype = 3,
-      size = 1.5
-    ),
+      size = 1.5),
     theme.data.points = NULL
 )
 g.nfkb.ts.comparison
@@ -115,7 +143,7 @@ g.nfkb.ts.comparison
 #### ####
 model.tp18$itrc %>%
   dplyr::left_join(
-    signals.rescale.df,
+    theme.signal$signals.rescale.df,
     by = model.ts$signal) %>%
   dplyr::mutate(type = "itrc") ->
   model.tp18$itrc.rescaled
@@ -124,7 +152,7 @@ g.nfkb.ts.comparison +
   ggplot2::geom_line(
     data = model.tp18$itrc.rescaled,
     mapping = ggplot2::aes_string(
-      x = col.rescaled,
+      x = theme.signal$col.rescaled,
       y = "itrc",
       group = "type"
     )
@@ -132,7 +160,7 @@ g.nfkb.ts.comparison +
   ggplot2::geom_point(
     data = model.tp18$itrc.rescaled,
     mapping = ggplot2::aes_string(
-      x = col.rescaled,
+      x = theme.signal$col.rescaled,
       y = "itrc"
     )
   ) ->
