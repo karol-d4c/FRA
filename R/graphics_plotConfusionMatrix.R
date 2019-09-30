@@ -79,7 +79,7 @@ plotCofusionMatrix <-
           )
       ) +
       ggplot2::geom_bar(stat = "identity") +
-      ggplot2::facet_grid("Stim~class",
+      ggplot2::facet_grid(paste(model$signal,model$class, sep = "~"),
                           switch = "both"
       ) +
       ggplot2::coord_polar(theta = "y", start = 0) +
