@@ -11,8 +11,8 @@ library(ITRC)
 
 #### Model initialisation ####
 model.name <- "manuscript1d"
-output.path <- "/media/knt/sdb2/KN/ITRC/resources/model/overlapping/testing/"
-output.path <- "resources/model/overlapping/testing/"
+output.path <- "/media/knt/sdb2/KN/ITRC/resources/model/overlapping/2019-04-12/"
+#output.path <- "resources/model/overlapping/testing/"
 
 dir.create(path = output.path, recursive = TRUE)
 #### model parameters ####
@@ -145,3 +145,5 @@ ggplot2::ggsave(
   useDingbats = FALSE
 )
 
+
+ITRC::plotCofusionMatrix(model = model, confusion.signal = 1)

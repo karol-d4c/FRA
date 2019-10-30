@@ -50,7 +50,7 @@ plotCofusionMatrix <-
     # names(summary_vars) <- experiments.df$response.protein
     confusion.signal.syms <- quo(max.signal == max(!!sym(model$signal)))
     if(!is.null(confusion.signal)){
-      if(!is.numeric(confusion.signal)){
+      if(is.numeric(confusion.signal)){
         confusion.signal.syms <- quo(max.signal == confusion.signal)
       }
     }
