@@ -146,4 +146,12 @@ ggplot2::ggsave(
 )
 
 
-ITRC::plotCofusionMatrix(model = model, confusion.signal = 1)
+ITRC::plotCofusionMatrix(model = model, confusion.signal = 1) -> g
+
+ggplot2::ggsave(
+  filename = paste(output.path, "confusion_matrix_overlapping.pdf", sep = "/"),
+  plot = g,
+  width = 6,
+  height = 6,
+  useDingbats = FALSE
+)
