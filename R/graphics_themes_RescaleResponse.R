@@ -1,9 +1,9 @@
-#' rescaleDataToITRC.Params
-#' @param model ITRCModel
+#' rescaleDataToSCRC.Params
+#' @param model SCRCModel
 #' @param data data to rescale
 #' @param variable.to.compare variable.to.compare TODO
 #' @param data_raw_min data_raw_min 0 or min of data
-rescaleDataToITRC.Params <-
+rescaleDataToSCRC.Params <-
   function(
     model = NULL,
     data,
@@ -24,16 +24,16 @@ rescaleDataToITRC.Params <-
 
     if(is.null(signal.max)){
       signal.max <-
-        (model$itrc %>%
+        (model$SCRC %>%
            dplyr::filter_(paste(model$signal, "==",
                                 "max(", model$signal, ")")))[[model$signal]]
     }
 
-    data_states_min <- min((model$itrc %>%
-                              dplyr::filter(itrc == min(itrc)))[["itrc"]])
-    data_states_max <- max((model$itrc %>%
+    data_states_min <- min((model$SCRC %>%
+                              dplyr::filter(SCRC == min(SCRC)))[["SCRC"]])
+    data_states_max <- max((model$SCRC %>%
                               dplyr::filter_(paste(model$signal, "<=", signal.max)) %>%
-                              dplyr::filter(itrc == max(itrc)))[["itrc"]])
+                              dplyr::filter(SCRC == max(SCRC)))[["SCRC"]])
 
     if(is.null(data_raw_min)){
       data_raw_min <-
@@ -55,14 +55,14 @@ rescaleDataToITRC.Params <-
                 b = data_states_max - a*data_raw_max))
   }
 
-#' rescaleDataToITRC.DataFrame
-#' @param model ITRCModel
+#' rescaleDataToSCRC.DataFrame
+#' @param model SCRCModel
 #' @param data data to rescale
 #' @param variable.to.compare variable.to.compare TODO
 #' @param variable.rescaled variable.rescaled TODO
-#' @inheritDotParams rescaleDataToITRC.Params
+#' @inheritDotParams rescaleDataToSCRC.Params
 #' @export
-rescaleDataToITRC.DataFrame <-
+rescaleDataToSCRC.DataFrame <-
   function(
     model,
     data = NULL,
@@ -93,7 +93,7 @@ rescaleDataToITRC.DataFrame <-
 
     if(is.null(a) | is.null(b)){
       rescale.params <-
-        rescaleDataToITRC.Params(
+        rescaleDataToSCRC.Params(
           model = model,
           data = data,
           variable.to.compare = variable.to.compare,

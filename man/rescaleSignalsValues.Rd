@@ -4,9 +4,13 @@
 \alias{rescaleSignalsValues}
 \title{rescaleSignalsValues}
 \usage{
-rescaleSignalsValues(signal.list, rescale.fun = "factor",
-  rescale.fun.args = list(), signal.rescale.remove = c(NA, NaN, -Inf,
-  Inf), ...)
+rescaleSignalsValues(
+  signal.list,
+  rescale.fun = "factor",
+  rescale.fun.args = list(),
+  signal.rescale.remove = c(NA, NaN, -Inf, Inf),
+  ...
+)
 }
 \arguments{
 \item{rescale.fun}{parameter, that defines a function used for rescaling signals in plots.

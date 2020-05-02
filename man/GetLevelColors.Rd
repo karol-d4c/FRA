@@ -11,13 +11,14 @@ GetLevelColors(levels, levels.names = levels, ...)
 
 \item{levels.names}{character vector, names of signals}
 
-\item{...}{Arguments passed on to \code{GetPalleteColors}
-\describe{
-  \item{pallete}{specify colors pallete; pallete can be chosen from set
+\item{...}{
+  Arguments passed on to \code{\link[=GetPalleteColors]{GetPalleteColors}}
+  \describe{
+    \item{\code{pallete}}{specify colors pallete; pallete can be chosen from set
 \code{c("virdis", "blue_red", "blue_green_red", "yellow_red", "orange", "bcgyr")} or as a vector of colors that will be
 passed to the function \code{GetPalleteFun} to create new pallete}
-  \item{pallete.args}{list, arguments to pallete (for instance to virdis function)}
-}}
+    \item{\code{pallete.args}}{list, arguments to pallete (for instance to virdis function)}
+  }}
 }
 \value{
 vector of colors for signal levels

@@ -1,4 +1,4 @@
-#' Constructor of ITRCModel S3 object
+#' Constructor of SCRCModel S3 object
 #'
 #' @param data A data.frame or data.table object in a wide format that describe
 #'  response (might be multidimmensional) of the samples to the signal
@@ -16,8 +16,8 @@
 #' @param sample character (optional), specify name of the column that consists identifiaction of
 #' sample
 #'
-#' @return ITRCModel S3 object with
-new_ITRCModel <-
+#' @return SCRCModel S3 object with
+new_SCRCModel <-
   function(
     data,
     signal,
@@ -68,15 +68,15 @@ new_ITRCModel <-
            response = response,
            sample = sample
       )
-    class(model) <- "ITRCModel"
+    class(model) <- "SCRCModel"
     return(model)
   }
 
 
-#' print.ITRCModel
+#' print.SCRCModel
 #'
 #' @export
-print.ITRCModel <-
+print.SCRCModel <-
   function(x, ...) {
     #print(format(x, ...), "\n")
     cat(format(class(x), justify = "left"), "\n")
@@ -85,10 +85,10 @@ print.ITRCModel <-
         "~",
         paste(x$response, collapse = "+"),
         "\n")
-    cat("itrc :", "\n")
-    itrc_vec <- x$itrc$itrc
-    names(itrc_vec) <-x$itrc[[x$signal]]
-    print(round(itrc_vec, digits = 2))
+    cat("SCRC :", "\n")
+    SCRC_vec <- x$SCRC$SCRC
+    names(SCRC_vec) <-x$SCRC[[x$signal]]
+    print(round(SCRC_vec, digits = 2))
     cat("confusion matrix :", "\n")
     print(round(as.matrix(x$confusion.matrix), digits = 2))
     # print(
@@ -99,8 +99,8 @@ print.ITRCModel <-
     #   digits = 3)
   }
 
-#' format.ITRCModel
-format.ITRCModel <-
+#' format.SCRCModel
+format.SCRCModel <-
   function(
     model,
     ...

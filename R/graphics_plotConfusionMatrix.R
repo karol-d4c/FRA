@@ -1,9 +1,9 @@
-#' plotITRCWaves
+#' plotSCRCWaves
 #'
 #' @description This functions return ggplot2 figure that visualise Information
 #'  Theoretic Response Curves and specificity of cellular response to particular signals.
 #'
-#' @param model ITRCModel object return by ITRC function
+#' @param model SCRCModel object return by SCRC function
 #' @param confusion.signal signal for which you want to plot confusion matrix, default \code{confusion.signal == max(signal)}
 #' @param title_ character, specify title of plot, default \code{"Information Theoretic Response Curve"}
 #' @param xlab_ character, label of x axes, default \code{"States number"}
@@ -22,13 +22,13 @@ plotCofusionMatrix <-
   ){
 
     if(is.null(model)){
-      stop("model must be an object of class ITRCModel")
-    } else if(class(model) != "ITRCModel"){
-      stop("model must be an object of class ITRCModel")
+      stop("model must be an object of class SCRCModel")
+    } else if(class(model) != "SCRCModel"){
+      stop("model must be an object of class SCRCModel")
     }
 
     if(is.null(model$confusion.table)){
-      stop("model must be an object of class ITRCModel and should contain confusion.table")
+      stop("model must be an object of class SCRCModel and should contain confusion.table")
     }
 
     x_ = "1"
@@ -84,7 +84,7 @@ plotCofusionMatrix <-
       ) +
       ggplot2::coord_polar(theta = "y", start = 0) +
       ggplot2::ylim(c(0,1)) +
-      theme_itrc.confusion_matrix(theme.title_size = 12) +
+      theme_scrc.confusion_matrix(theme.title_size = 12) +
       ggplot2::ylab(ylab_) +
       ggplot2::xlab(xlab_) +
       ggplot2::ggtitle(title_) +

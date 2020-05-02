@@ -1,4 +1,4 @@
-CalculateITRC <-
+CalculateSCRC <-
   function(
     model,
     cols.list,
@@ -13,24 +13,24 @@ CalculateITRC <-
       ) ->
       confusion.bootstrap.diagonal.table
 
-    foreach::foreach(itrc.i =
+    foreach::foreach(scrc.i =
                        1:nrow(confusion.bootstrap.diagonal.table)) %do% {
 
-      itrc_ <- confusion.bootstrap.diagonal.table[itrc.i,]
+      scrc_ <- confusion.bootstrap.diagonal.table[scrc.i,]
       prob_ <-
         (confusion.bootstrap.diagonal.table %>%
            dplyr::filter(
-             max.signal == itrc_[["max.signal"]],
-             bootstrap ==  itrc_[["bootstrap"]],
-             computation ==  itrc_[["computation"]]
+             max.signal == scrc_[["max.signal"]],
+             bootstrap ==  scrc_[["bootstrap"]],
+             computation ==  scrc_[["computation"]]
              ) %>%
            dplyr::filter_(
              paste(model$signal,
                    "<=",
-                   itrc_[[model$signal]])
+                   scrc_[[model$signal]])
            ) %>%
            dplyr::summarise(prob.bootstrap = sum(prob.bootstrap)))[["prob.bootstrap"]]
-      itrc_ %>%
+      scrc_ %>%
         dplyr::mutate(prob.bootstrap = prob_)
     }  %>%
       do.call(what = rbind,
@@ -46,31 +46,31 @@ CalculateITRC <-
       dplyr::ungroup() %>%
       dplyr::arrange_("max.signal",
                       model$signal) %>%
-      dplyr::mutate(itrc = prob.mean) ->
-      model$itrc.table
+      dplyr::mutate(scrc = prob.mean) ->
+      model$scrc.table
 
-    model$itrc.table[1,] %>%
+    model$scrc.table[1,] %>%
       dplyr::mutate_all(.funs = function(x){0}) %>%
-      dplyr::mutate(itrc = 1,
+      dplyr::mutate(scrc = 1,
                     prob.mean = 1) %>%
-      rbind(model$itrc.table) %>%
+      rbind(model$scrc.table) %>%
       dplyr::ungroup() ->
-      model$itrc.table
+      model$scrc.table
 
-    model$itrc.table %>%
+    model$scrc.table %>%
       dplyr::group_by_(
         model$signal
       ) %>%
       dplyr::summarise(
-        itrc =
+        scrc =
           max(prob.mean)
       ) ->
-      model$itrc
+      model$scrc
 
-    max.itrc <- 1
-    for(i in 1:nrow(model$itrc)) {
-      max.itrc <- max(max.itrc, model$itrc[i,]$itrc)
-      model$itrc[i,]$itrc <- max.itrc
+    max.scrc <- 1
+    for(i in 1:nrow(model$scrc)) {
+      max.scrc <- max(max.scrc, model$scrc[i,]$scrc)
+      model$scrc[i,]$scrc <- max.scrc
     }
 
     return(model)

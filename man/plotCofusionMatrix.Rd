@@ -2,14 +2,20 @@
 % Please edit documentation in R/graphics_plotConfusionMatrix.R
 \name{plotCofusionMatrix}
 \alias{plotCofusionMatrix}
-\title{plotITRCWaves}
+\title{plotSCRCWaves}
 \usage{
-plotCofusionMatrix(model, confusion.signal = NULL, save.plot = FALSE,
-  title_ = "", ylab_ = "Specific Stimulation Level",
-  xlab_ = "Stimulation Level", ...)
+plotCofusionMatrix(
+  model,
+  confusion.signal = NULL,
+  save.plot = FALSE,
+  title_ = "",
+  ylab_ = "Specific Stimulation Level",
+  xlab_ = "Stimulation Level",
+  ...
+)
 }
 \arguments{
-\item{model}{ITRCModel object return by ITRC function}
+\item{model}{SCRCModel object return by SCRC function}
 
 \item{confusion.signal}{signal for which you want to plot confusion matrix, default \code{confusion.signal == max(signal)}}
 

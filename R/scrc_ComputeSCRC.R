@@ -1,10 +1,10 @@
-ComputeITRC <-
+ComputeSCRC <-
   function(model,
            parallel_cores,
            cc_maxit = 100,
            lr_maxit = 1000,
            MaxNWts = 5000,
-           ITRC.DEBUG = FALSE,
+           SCRC.DEBUG = FALSE,
            ...
   ) {
     signal.list <- (model$data %>%
@@ -32,7 +32,7 @@ ComputeITRC <-
 
     model$compuatations.task.list <- compuatations.task.list
     if(length(compuatations.task.list) < 1){
-      stop("ITRC can be computed if number of signals is higher than 1")
+      stop("SCRC can be computed if number of signals is higher than 1")
     }
 
     doParallel::registerDoParallel(parallel_cores)
@@ -163,7 +163,7 @@ ComputeITRC <-
        cols.list = cols.list)
 
     model <-
-      CalculateITRC(
+      CalculateSCRC(
         model = model,
         cols.list = cols.list
       )

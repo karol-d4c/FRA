@@ -21,10 +21,10 @@
 #' @param bootstrap.number \code{default = 1}
 #' @param bootstrap.sample_size \code{default = NULL}
 #'
-#' @return ITRC S3 object with
+#' @return SCRC S3 object with
 #'
 #' @export
-ITRC <-
+SCRC <-
   function(
     data,
     signal = "signal",
@@ -37,7 +37,7 @@ ITRC <-
   ){
 
     model <-
-      new_ITRCModel(
+      new_SCRCModel(
         data = data,
         signal = signal,
         response = response,
@@ -66,7 +66,7 @@ ITRC <-
 
     #### TODO
     model <-
-      ComputeITRC(
+      ComputeSCRC(
         model = model,
         parallel_cores =
           parallel_cores,

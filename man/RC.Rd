@@ -4,9 +4,17 @@
 \alias{RC}
 \title{Compute standard Response Curve}
 \usage{
-RC(model = NULL, data, signal = "signal", response = "response",
-  sample = "sample", bootstrap.number = 0,
-  bootstrap.sample_size = NULL, parallel_cores = 1, ...)
+RC(
+  model = NULL,
+  data,
+  signal = "signal",
+  response = "response",
+  sample = "sample",
+  bootstrap.number = 0,
+  bootstrap.sample_size = NULL,
+  parallel_cores = 1,
+  ...
+)
 }
 \arguments{
 \item{model}{ITRC S3 object that could be obtain from ITRC function}

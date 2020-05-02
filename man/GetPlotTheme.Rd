@@ -4,10 +4,10 @@
 \alias{GetPlotTheme}
 \title{GetPlotTheme}
 \usage{
-GetPlotTheme(theme_fun = theme_itrc, theme_fun.args = list(), ...)
+GetPlotTheme(theme_fun = theme_scrc, theme_fun.args = list(), ...)
 }
 \arguments{
-\item{theme_fun}{\code{ggthemes} or \code{ggplot2} theme function. Default set to \code{theme_itrc}.}
+\item{theme_fun}{\code{ggthemes} or \code{ggplot2} theme function. Default set to \code{theme_scrc}.}
 
 \item{theme_fun.args}{list of parameters to \code{theme_fun}}
 }

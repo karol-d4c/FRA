@@ -4,11 +4,15 @@
 \alias{GetRescaledSignalTheme}
 \title{GetRescaledSignalTheme}
 \usage{
-GetRescaledSignalTheme(model = NULL, signals.rescale.df = NULL,
-  colors = NULL, ...)
+GetRescaledSignalTheme(
+  model = NULL,
+  signals.rescale.df = NULL,
+  colors = NULL,
+  ...
+)
 }
 \arguments{
-\item{model}{ITRCModel object return by ITRC function}
+\item{model}{SCRCModel object return by SCRC function}
 
 \item{signals.rescale.df}{optional, data.frame returned from \code{rescaleSignalsValues.DataFrame}}
 

@@ -16,7 +16,7 @@ CalculateConfusion <-
       signal.list <- signal.list[signal.list <= confusion.signal.max]
     }
     if(length(signal.list) <= 1){
-      stop("There must be at last two sigals to plot ITRC waves")
+      stop("There must be at last two sigals to plot SCRC waves")
     }
     if(is.null(confusion.signal.max)){
       confusion.signal.max <- max(signal.list)

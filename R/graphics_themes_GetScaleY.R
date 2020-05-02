@@ -1,4 +1,4 @@
-getScaleY.ITRC <-
+getScaleY.SCRC <-
   function(
     ylab,
     ylimits = NULL,
@@ -19,7 +19,7 @@ getScaleY.ITRC <-
 
 
 
-getScaleY.ITRCComparison <-
+getScaleY.SCRCComparison <-
   function(
     scaleY.a,
     scaleY.b,

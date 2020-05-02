@@ -1,9 +1,9 @@
-#' plotITRCWaves
+#' plotSCRCWaves
 #'
 #' @description This functions return ggplot2 figure that visualise Information
 #'  Theoretic Response Curves and specificity of cellular response to particular signals.
 #'
-#' @param model ITRCModel object return by ITRC function
+#' @param model SCRCModel object return by SCRC function
 #' @param title_ character, specify title of plot, default \code{"Information Theoretic Response Curve"}
 #' @param xlab_ character, label of x axes, default \code{"States number"}
 #' @param ylab_ character, label of y axes and legend title, default \code{"Signal levels"}
@@ -14,7 +14,7 @@
 # #' @inheritDotParams GetPlotTheme
 #' @details TODO important
 #' @export
-plotITRCWaves <-
+plotSCRCWaves <-
   function(
     model,
     title_ =
@@ -24,14 +24,14 @@ plotITRCWaves <-
     fill.guide_ = "legend",
     ylimits_ = TRUE,
     alpha_ = 0.5,
-    getScaleY = getScaleY.ITRC,
+    getScaleY = getScaleY.SCRC,
     theme.signal = NULL,
     ...
   ){
     if(is.null(model)){
-      stop("model must be an object of class ITRCModel")
-    } else if(class(model) != "ITRCModel"){
-      stop("model must be an object of class ITRCModel")
+      stop("model must be an object of class SCRCModel")
+    } else if(class(model) != "SCRCModel"){
+      stop("model must be an object of class SCRCModel")
     }
 
     model <-
@@ -41,7 +41,7 @@ plotITRCWaves <-
 
     if(is.null(theme.signal)){
       theme.signal <-
-        ITRC::GetRescaledSignalTheme(
+        SCRC::GetRescaledSignalTheme(
           model = model,
           ...
         )
@@ -56,10 +56,10 @@ plotITRCWaves <-
       GetPlotTheme(...) +
       ggplot2::ggtitle(title_)
 
-    x.itrc  <- "signal_rescaled"
-    y.itrc <- "itrc"
-    group.itrc <- "type"
-    ggplot.data.itrc <-
+    x.SCRC  <- "signal_rescaled"
+    y.SCRC <- "scrc"
+    group.SCRC <- "type"
+    ggplot.data.SCRC <-
       model$confusion.waves %>%
       dplyr::filter_(paste(model$signal, "==", model$class)) %>%
       dplyr::left_join(
@@ -67,21 +67,21 @@ plotITRCWaves <-
         by = model$signal
       ) %>%
       dplyr::mutate(
-        type = "itrc")
+        type = "SCRC")
 
     g.plot +
       ggplot2::geom_point(
-        data = ggplot.data.itrc,
+        data = ggplot.data.SCRC,
         mapping = ggplot2::aes_string(
-          x = x.itrc,
-          y = y.itrc)
+          x = x.SCRC,
+          y = y.SCRC)
       ) +
       ggplot2::geom_line(
-        data = ggplot.data.itrc,
+        data = ggplot.data.SCRC,
         mapping = ggplot2::aes_string(
-          x = x.itrc,
-          y = y.itrc,
-          group = group.itrc)
+          x = x.SCRC,
+          y = y.SCRC,
+          group = group.SCRC)
       ) ->
       g.plot
 
@@ -96,7 +96,7 @@ plotITRCWaves <-
         by = model$signal
       ) %>%
       dplyr::mutate(
-        type = "itrc")
+        type = "SCRC")
 
     g.plot +
       ggplot2::geom_polygon(

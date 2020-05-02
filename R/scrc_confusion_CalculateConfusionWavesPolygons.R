@@ -6,7 +6,7 @@ CalculateConfusionWavesPolygons <-
     ...
   ){
     confusion.waves %>%
-      dplyr::mutate(position  = itrc + prob) %>%
+      dplyr::mutate(position  = scrc + prob) %>%
       dplyr::arrange_(
         model$signal,
         model$class) %>%
@@ -19,17 +19,17 @@ CalculateConfusionWavesPolygons <-
                  paste(
                    model$signal, "==", model$class,
                    "&", "(1 >= abs(class_level_ - signal_level))")) %>%
-               dplyr::mutate(position = itrc)) %>%
+               dplyr::mutate(position = scrc)) %>%
               rbind(
                 (confusion.waves %>%
                    dplyr::filter((class_level == class_level_ - 1) &
                                    (signal_level < class_level_ - 1)) %>%
-                   dplyr::mutate(position = itrc + prob))) %>%
+                   dplyr::mutate(position = scrc + prob))) %>%
               rbind(
                 (confusion.waves %>%
                    dplyr::filter((class_level == class_level_ + 1) &
                                    (signal_level > class_level_ + 1)) %>%
-                   dplyr::mutate(position = itrc + prob))) %>%
+                   dplyr::mutate(position = scrc + prob))) %>%
               dplyr::mutate_(
                 .dots = setNames(
                   nm = model$class,

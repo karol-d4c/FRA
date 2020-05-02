@@ -114,7 +114,7 @@ rescaleSignalsValues <-
 
 #' rescaleSignalsValues.DataFrame
 #'
-#' @param model ITRCModel
+#' @param model SCRCModel
 #' @param col.to.rescale character, define column that must be rescaled
 #' @param col.rescaled character, define name of the rescaled
 #' @inheritDotParams rescaleSignalsValues

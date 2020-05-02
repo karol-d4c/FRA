@@ -4,7 +4,7 @@
 #' and \code{GetLevelColors} are called respectively
 #'
 #'
-#' @param model  ITRCModel object return by ITRC function
+#' @param model  SCRCModel object return by SCRC function
 #' @param signals.rescale.df optional, data.frame returned from \code{rescaleSignalsValues.DataFrame}
 #' @param colors optional, vector returned from \code{GetLevelColors}
 #'
@@ -18,9 +18,9 @@ GetRescaledSignalTheme   <-
     ...
   ){
     if(is.null(model)){
-      stop("model must be an object of class ITRCModel")
-    } else if(class(model) != "ITRCModel"){
-      stop("model must be an object of class ITRCModel")
+      stop("model must be an object of class SCRCModel")
+    } else if(class(model) != "SCRCModel"){
+      stop("model must be an object of class SCRCModel")
     }
 
     col.rescaled <- "signal_rescaled"

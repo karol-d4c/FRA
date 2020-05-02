@@ -4,8 +4,13 @@
 \alias{GetWaveColorsRescalingObject}
 \title{GetWaveColorsRescalingObject}
 \usage{
-GetWaveColorsRescalingObject(pallete.fun = NULL, class.list,
-  colors.n = 100, colors.min.diff = 2, ...)
+GetWaveColorsRescalingObject(
+  pallete.fun = NULL,
+  class.list,
+  colors.n = 100,
+  colors.min.diff = 2,
+  ...
+)
 }
 \arguments{
 \item{pallete.fun}{function, declared as \code{function(n){ }} that returns n colors with increasing intensity}

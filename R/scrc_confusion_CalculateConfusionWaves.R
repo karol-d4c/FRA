@@ -82,7 +82,7 @@ CalculateConfusionWaves <-
         what = rbind,
         args = .) %>%
       dplyr::left_join(
-        y = model$itrc,
+        y = model$scrc,
         by = model$signal) %>%
       dplyr::left_join(
         y = GetLevelsDf.Signal(

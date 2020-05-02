@@ -1,19 +1,19 @@
-#' plotITRCWaves.Comparison
+#' plotSCRCWaves.Comparison
 #'
 #' @description This functions return ggplot2 figure that visualise Information
 #'  Theoretic Response Curves and specificity of cellular response to particular signals.
-#' @param model ITRCModel object return by ITRC function
+#' @param model SCRCModel object return by SCRC function
 #' @param data, column "model$signal" and
 #' @param variable.to.compare, column of data
 #' @param data_raw_min, column of data
 #' @param ylab.right character, label of right y axes and legend title, default \code{"Signal levels"}
 #' @param theme.signal optional, object returned by \code{GetRescaledSignalTheme}
 #' @param signal.max ...
-#' @inheritDotParams plotITRCWaves
+#' @inheritDotParams plotSCRCWaves
 # #' @inheritDotParams GetPlotTheme
 #' @details TODO important
 #' @export
-plotITRCWaves.Comparison <-
+plotSCRCWaves.Comparison <-
   function(
     model,
     data,
@@ -31,9 +31,9 @@ plotITRCWaves.Comparison <-
     ...
   ){
     if(is.null(model)){
-      stop("model must be an object of class ITRCModel")
-    } else if(class(model) != "ITRCModel"){
-      stop("model must be an object of class ITRCModel")
+      stop("model must be an object of class SCRCModel")
+    } else if(class(model) != "SCRCModel"){
+      stop("model must be an object of class SCRCModel")
     }
 
     if(!exists(x = "data")){
@@ -50,7 +50,7 @@ plotITRCWaves.Comparison <-
 
     if(is.null(theme.signal)){
       theme.signal <-
-        ITRC::GetRescaledSignalTheme(
+        SCRC::GetRescaledSignalTheme(
           model = model,
           ...
         )
@@ -64,7 +64,7 @@ plotITRCWaves.Comparison <-
       variable.to.rescale <- variable.rescaled
     }
     rescaled.list <-
-      ITRC::rescaleDataToITRC.DataFrame(
+      SCRC::rescaleDataToSCRC.DataFrame(
         model = model,
         data  = data,
         variable.to.compare = variable.to.compare,
@@ -83,11 +83,11 @@ plotITRCWaves.Comparison <-
     #ylimits_ <- c(floor(ylimits_[1]), ceiling(ylimits_[2]))
     print(signals.rescale.df)
     g.plot <-
-      ITRC::plotITRCWaves(
+      SCRC::plotSCRCWaves(
         model = model,
         signals.rescale.df = signals.rescale.df,
         getScaleY =
-          getScaleY.ITRCComparison,
+          getScaleY.SCRCComparison,
         scaleY.a = rescaled.list$a,
         scaleY.b = rescaled.list$b,
         ylab.right = ylab.right,

@@ -1,6 +1,6 @@
-#' theme_itrc
+#' theme_scrc
 #'
-#' @description This function specify theme used in the ITRC package
+#' @description This function specify theme used in the scrc package
 #'
 #' @param  theme.base_size = 12,
 #' @param  theme.base_family = "sans",
@@ -12,7 +12,7 @@
 #' @return ggthemes::theme_foundation object
 #'
 #' @export
-theme_itrc <-  function(
+theme_scrc <-  function(
   theme.base_size = 9,
   theme.base_family = "sans",
   theme.title_size = 12,
