@@ -23,7 +23,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-
 # Introduction
 
 This vignette demonstrates how to use the ITRC package, that extends the representation of dose-response relationship into multidimmensional response and by considering distribution of response instead of its statistics e.g mean/median. Here, we will use experimental data firstly attatched to  [`SLEMI` package](https://github.com/sysbiosig/SLEMI), that shows relation between stimulation of cells by TNF-$\alpha$ and  ration of nuclear to cellular concentration of NF-$\kappa$B in time (see more in [Tjetka et al](https://arxiv.org/abs/1808.05581)).

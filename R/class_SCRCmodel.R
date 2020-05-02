@@ -86,8 +86,8 @@ print.SCRCModel <-
         paste(x$response, collapse = "+"),
         "\n")
     cat("SCRC :", "\n")
-    SCRC_vec <- x$SCRC$SCRC
-    names(SCRC_vec) <-x$SCRC[[x$signal]]
+    SCRC_vec <- x$scrc$scrc
+    names(SCRC_vec) <-x$scrc[[x$signal]]
     print(round(SCRC_vec, digits = 2))
     cat("confusion matrix :", "\n")
     print(round(as.matrix(x$confusion.matrix), digits = 2))
