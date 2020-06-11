@@ -32,7 +32,7 @@ ComputeSCRC <-
 
     model$compuatations.task.list <- compuatations.task.list
     if(length(compuatations.task.list) < 1){
-      stop("SCRC can be computed if number of signals is higher than 1")
+      stop("Fractional response analysis cannot be done if number of signals is higher than 1")
     }
 
     doParallel::registerDoParallel(parallel_cores)
@@ -168,5 +168,9 @@ ComputeSCRC <-
         cols.list = cols.list
       )
 
+    model$frc <- model$scrc
+    colnames(model$frc) <- c("dose", "FRC")
+    model$heterogeneity <- model$confusion.matrix
+    
     return(model)
   }

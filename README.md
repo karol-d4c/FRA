@@ -1,6 +1,6 @@
 # Fractional Response Analysis (FRA) - R package
 R- package FRA is designed to performs fractional response analysi of single-cell responses as presented in the manuscript Nienałtowski et al. "Fractional response analysis reveals logarithmic cytokine responses in cellular populations" Submitted (2020).
- A comprehensive documentation is available in directory [`XXXXXXXX.pdf`](https://github.com/sysbiosig/XXXXXXX).
+ A comprehensive documentation is available in directory [`Manual.pdf`](https://github.com/sysbiosig/Manual.pdf).
 
 # Setup
  ## Requirements - Hardware
@@ -57,7 +57,7 @@ The package can be directly installed from [GitHub](https://github.com/sysbiosig
  
 All packages that are required will be installed or updated automatically.
  
-# Basic usage
+# Basic usage 
  
 The FRA package provides their functionalities with three main functions:
 
@@ -89,7 +89,7 @@ Responses $y^i_j$ are assumed to be measured for a finite set of stimuli levels 
 library(FRA)
 model <-
   FRA(
-    data = FRA::data.itrc.cytof,
+    data = FRA::data.fra.cytof,
     signal = "Stim",
     response = c("pSTAT1", "pSTAT3", "pSTAT4", "pSTAT5", "pSTAT6"),
     parallel_cores = 1,
@@ -111,7 +111,8 @@ FRA::plotHeterogeneityPieCharts(model = model)
 # Documentation
 ## Fractional response analysis
 In order to perform fractional response analysis of single-cell data call 
-> model <-FRA(
+```c
+model <-FRA(
   data,
   signal = "signal",
   response = "response",
@@ -123,6 +124,8 @@ In order to perform fractional response analysis of single-cell data call
   MaxNWts = 5000,
   ...
 )
+
+``````
 
 The required arguments are:
 
@@ -176,18 +179,24 @@ plotHeterogeneityPieCharts(
   ...
 )
 ```
-
 * `model`	- FRAModel object return by FRA function
 * `max.signal` - maximal signal for which the cell-to-cell heterogeneity is plotted, `default  = max(signal)`
 *`title_`	- character, specify title of plot, `default = "Cell-to-cel heterogeneity"`
 * `ylab_` - character, label of y axes, `default = "dose"`
 * `xlab_`	- character, label of x axes, `default = "dose for which response is typical"`
 
- ## Support
- Please mail t.jetka at gmail.com in case of any bugs, problems and questions regarding package or inquiries regarding information theory.
- ## Reference
- Please cite
-> Jetka T, Nienałtowski K, Winarski T, Błoński S, Komorowski M (2019) Information-theoretic analysis of multivariate single-cell signaling responses. PLOS Computational Biology 15(7): e1007132. https://doi.org/10.1371/journal.pcbi.1007132
- ## Licence
- SLEMI is released under the GNU licence and is freely available. A comprehensive documentation is available in directory [`vignette/SLEMI_vignette.pdf`](https://github.com/sysbiosig/SLEMI/blob/master/vignette/SLEMI_vignette.pdf).
+# Citation
+The package implements methods described in the article: 
+
+Niena\l{}towski K, Rigby R.E., Walczak J., Zakrzewska K.E., Rehwinkel J, and Komorowski M (2020) Fractional response analysis reveals logarithmic cytokine responses in cellular populations.
+
+# Support
+All problems, issues and bugs can be reported here:
+
+> [https://github.com/sysbiosig/FRA/issues](https://github.com/sysbiosig/FRA/issues)
+
+or directly via e-mail: karol.nienaltowski a t gmail.com.
+
+# Licence
+ FRA is released under the GNU licence and is freely available. A comprehensive documentation is available in directory [`Manual.pdf`](https://github.com/sysbiosig/SLEMI/blob/master/Manual.pdf).
 

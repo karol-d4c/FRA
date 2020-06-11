@@ -1,6 +1,6 @@
 #' GenerateNoBootstrapSample
 #'
-#' @param model SCRCModel
+#' @param model FRAModel
 #'
 #' @description This function generate bootstrap samples
 #'
@@ -9,13 +9,13 @@ GenerateNoBootstrapSample <-
     UseMethod("GenerateNoBootstrapSample")
   }
 
-#' GenerateNoBootstrapSample.SCRCModel
+#' GenerateNoBootstrapSample.FRAModel
 #'
-#' @param model SCRCModel
+#' @param model FRAModel
 #'
 #' @description This function generate bootstrap samples
 #'
-GenerateNoBootstrapSample.SCRCModel <-
+GenerateNoBootstrapSample.FRAModel <-
   function(
     model,
     ...
@@ -39,7 +39,7 @@ GenerateNoBootstrapSample.SCRCModel <-
 #'
 #' @description This function generate bootstrap samples
 #'
-#' @param model SCRCModel
+#' @param model FRAModel
 #'
 GenerateBootstrapSample <-
   function(model,
@@ -47,9 +47,9 @@ GenerateBootstrapSample <-
     UseMethod("GenerateBootstrapSample")
   }
 
-#' GenerateBootstrapSample.SCRCModel
+#' GenerateBootstrapSample.FRAModel
 #'
-#' @param model SCRCModel
+#' @param model FRAModel
 #' @param bootstrap.number number of bootstrap sampling
 #' @param bootstrap.sample_size size of one bootstrap sample
 #'
@@ -57,7 +57,7 @@ GenerateBootstrapSample <-
 #' @importFrom foreach %do%
 #' @importFrom dplyr %>%
 #'
-GenerateBootstrapSample.SCRCModel <-
+GenerateBootstrapSample.FRAModel <-
   function(
     model,
     bootstrap.number = 1,

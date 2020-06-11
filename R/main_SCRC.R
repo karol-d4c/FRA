@@ -37,7 +37,7 @@ FRA <-
   ){
 
     model <-
-      new_SCRCModel(
+      new_FRAModel(
         data = data,
         signal = signal,
         response = response,

@@ -39,7 +39,7 @@ RC <-
 
     if(is.null(model)){
       model <-
-        new_ITRCModel(
+        new_FRAModel(
           data = data,
           signal = signal,
           response = response,

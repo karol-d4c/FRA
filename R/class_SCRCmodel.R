@@ -73,10 +73,10 @@ new_FRAModel <-
   }
 
 
-#' print.SCRCModel
+#' print.FRAModel
 #'
 #' @export
-print.SCRCModel <-
+print.FRAModel <-
   function(x, ...) {
     #print(format(x, ...), "\n")
     cat(format(class(x), justify = "left"), "\n")
@@ -85,7 +85,7 @@ print.SCRCModel <-
         "~",
         paste(x$response, collapse = "+"),
         "\n")
-    cat("SCRC :", "\n")
+    cat("FRA :", "\n")
     SCRC_vec <- x$scrc$scrc
     names(SCRC_vec) <-x$scrc[[x$signal]]
     print(round(SCRC_vec, digits = 2))
@@ -99,8 +99,8 @@ print.SCRCModel <-
     #   digits = 3)
   }
 
-#' format.SCRCModel
-format.SCRCModel <-
+#' format.FRAModel
+format.FRAModel <-
   function(
     model,
     ...

@@ -42,7 +42,7 @@ plotFRC <-
 
     if(is.null(theme.signal)){
       theme.signal <-
-        SCRC::GetRescaledSignalTheme(
+        FRA::GetRescaledSignalTheme(
           model = model,
           ...
         )
@@ -86,6 +86,9 @@ plotFRC <-
       ) ->
       g.plot
     
+    
+    ylim_max <- 1.2*max(ggplot.data.SCRC[y.SCRC])
+    
     if(plot.heterogeneity){
       x.waves  <- "signal_rescaled"
       y.waves <- "position"
@@ -120,6 +123,8 @@ plotFRC <-
           labels = signals.rescale.df[[model$signal]]
         ) ->
         g.plot
+      
+      ylim_max <- 1.2*max(ggplot.data.waves$position)
     }
     
     if(!is.factor(signals.rescale.df[[col.rescaled]])){
@@ -143,7 +148,7 @@ plotFRC <-
 
       if(is.logical(ylimits_)){
         if(ylimits_){
-          ylimits_ <- c(1, 1.2*max(ggplot.data.waves$position))
+          ylimits_ <- c(1, ylim_max)
         } else {
           ylimits_ <- NULL
         }

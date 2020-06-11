@@ -50,7 +50,7 @@ plotFRC.Comparison <-
 
     if(is.null(theme.signal)){
       theme.signal <-
-        SCRC::GetRescaledSignalTheme(
+        FRA::GetRescaledSignalTheme(
           model = model,
           ...
         )
