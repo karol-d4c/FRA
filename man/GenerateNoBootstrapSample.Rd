@@ -7,7 +7,7 @@
 GenerateNoBootstrapSample(model)
 }
 \arguments{
-\item{model}{SCRCModel}
+\item{model}{FRAModel}
 }
 \description{
 This function generate bootstrap samples

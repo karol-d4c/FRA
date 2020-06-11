@@ -7,7 +7,7 @@
 GenerateDefaultBootstrapSampleSize(model, bootstrap.sample_size, ...)
 }
 \arguments{
-\item{model}{ITRCModel}
+\item{model}{FRAModel}
 
 \item{bootstrap.sample_size}{size of one bootstrap sample}
 }

@@ -294,7 +294,7 @@ In order to visualise fractional response curve call
 * `theme.signal`	- optional, object returned by GetRescaledSignalTheme
 *  `plot.heterogeneity` - logical, define if  FRC visualise the heterogeneity structure, `default = TRUE`
 
-## plotConfusionMatrix
+## plotHeterogeneityPieCharts
 In order to visualise th cell-to-cell heterogeneity structure, call
 ```c
 plotHeterogeneityPieCharts(

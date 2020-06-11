@@ -12,7 +12,7 @@ GetRescaledSignalTheme(
 )
 }
 \arguments{
-\item{model}{SCRCModel object return by SCRC function}
+\item{model}{FRAModel object return by SCRC function}
 
 \item{signals.rescale.df}{optional, data.frame returned from \code{rescaleSignalsValues.DataFrame}}
 
