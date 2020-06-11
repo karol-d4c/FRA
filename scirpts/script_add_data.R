@@ -76,3 +76,11 @@ data.itrc.nfkb.all <- data.nfkb
 devtools::use_data(
   data.itrc.nfkb.all,
   overwrite = TRUE)
+
+
+####
+library(devtools)
+data.fra.nfkb.all <- data.itrc.nfkb.all
+usethis::use_data(
+  data.fra.cytof,
+  overwrite = TRUE)

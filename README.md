@@ -1,6 +1,6 @@
 # Fractional Response Analysis (FRA) - R package
 R- package FRA is designed to performs fractional response analysi of single-cell responses as presented in the manuscript Nienałtowski et al. "Fractional response analysis reveals logarithmic cytokine responses in cellular populations" Submitted (2020).
- A comprehensive documentation is available in directory [`Manual.pdf`](https://github.com/sysbiosig/Manual.pdf).
+ A comprehensive documentation is available in directory [`Manual.pdf`](https://github.com/sysbiosig/FRA/blob/master/Manual.pdf).
 
 # Setup
  ## Requirements - Hardware
@@ -84,7 +84,7 @@ Morevoer, package contains examplary datasets, that were used in the publication
 Responses $y^i_j$ are assumed to be measured for a finite set of stimuli levels $x_1,x_2,\ldots,x_m$. The responses $y^i_j$ can be multidimensional.
 
 ### Example of usage 
-
+Below, we present an application of `FRA` package to the case of the multivariate dose-responses to IFN-a2a in **monocytes CD14+ CD16-** described in the article. Fractional response analysis are computed by calling function: 
 ```{r scrc_cytof_1, include=FALSE, cache=TRUE, eval=TRUE }
 library(FRA)
 model <-
@@ -99,11 +99,11 @@ The result is called by:
 ```{r scrc_cytof_2, include=TRUE, eval=TRUE }
 print(model)
 ```
-
+To plot fractional response curve is plotted by calling
 ```{r scrc_cytof_3, include=TRUE, eval=TRUE, cache=TRUE }
 FRA::plotFRC(model = model) 
 ```
-
+To obtain the cell-to-cell heterogeneity as a pie charts call:
 ```{r scrc_cytof_4, include=TRUE, eval=TRUE, cache=TRUE }
 FRA::plotHeterogeneityPieCharts(model = model)
 ```

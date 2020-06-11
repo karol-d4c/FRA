@@ -158,7 +158,7 @@ display_plots=TRUE
 ```
 
 ```{r nfkb2, results="asis",echo=FALSE}
-knitr::kable(head(FRA::data.itrc.cytof))
+knitr::kable(head(FRA::data.fra.cytof))
 ```
 
 where each row represents measurements of a single-cell, the column named `Stim` specifies the dose level of IFN-a2a, while `pSTAT1`, `pSTAT3`, `pSTAT4`,`pSTAT5`,`pSTAT6`  are the normalized levels of phosporylated STATs in an individual cell. The above table can be shown in R by calling
@@ -201,22 +201,12 @@ plot(model)
 ```
 
 ## Example of usage 
-Below, we present an application of `FRA` package to the case of the multivariate dose-responses to IFN-a2a in **monocytes CD14+ CD16-** described above. 
-```c
-library(FRA)
-model <-
-  FRA(
-    data = FRA::data.itrc.cytof,
-    signal = "Stim",
-    response = c("pSTAT1", "pSTAT3", "pSTAT4", "pSTAT5", "pSTAT6"),
-    bootstrap.number = 2)
-```
-
+Below, we present an application of `FRA` package to the case of the multivariate dose-responses to IFN-a2a in **monocytes CD14+ CD16-** described in the article. Fractional response analysis are computed by calling function: 
 ```{r scrc_cytof_1, include=FALSE, cache=TRUE, eval=TRUE }
 library(FRA)
 model <-
   FRA(
-    data = FRA::data.itrc.cytof,
+    data = FRA::data.fra.cytof,
     signal = "Stim",
     response = c("pSTAT1", "pSTAT3", "pSTAT4", "pSTAT5", "pSTAT6"),
     parallel_cores = 1,
@@ -226,11 +216,11 @@ The result is called by:
 ```{r scrc_cytof_2, include=TRUE, eval=TRUE }
 print(model)
 ```
-
+To plot fractional response curve is plotted by calling
 ```{r scrc_cytof_3, include=TRUE, eval=TRUE, cache=TRUE }
 FRA::plotFRC(model = model) 
 ```
-
+To obtain the cell-to-cell heterogeneity as a pie charts call:
 ```{r scrc_cytof_4, include=TRUE, eval=TRUE, cache=TRUE }
 FRA::plotHeterogeneityPieCharts(model = model)
 ```
