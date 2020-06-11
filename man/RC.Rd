@@ -45,7 +45,7 @@ sample}
 \item{bootstrap}{\code{default = FALSE}}
 }
 \value{
-ITRC S3 object with
+FRA S3 object with
 }
 \description{
 This function calculate Information Theroetic Response Curves.

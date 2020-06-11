@@ -1,19 +1,19 @@
-#' plotSCRCWaves.Comparison
-#'
-#' @description This functions return ggplot2 figure that visualise Information
-#'  Theoretic Response Curves and specificity of cellular response to particular signals.
-#' @param model SCRCModel object return by SCRC function
+#' plotFRA.Comparison
+#' 
+#' @description This functions return ggplot2 figure that visualise fractional response curve (FRC) compared to standard response curve 
+
+#' @param model FRAModel object return by FRA function
 #' @param data, column "model$signal" and
 #' @param variable.to.compare, column of data
 #' @param data_raw_min, column of data
 #' @param ylab.right character, label of right y axes and legend title, default \code{"Signal levels"}
 #' @param theme.signal optional, object returned by \code{GetRescaledSignalTheme}
 #' @param signal.max ...
-#' @inheritDotParams plotSCRCWaves
+#' @inheritDotParams plotFRC
 # #' @inheritDotParams GetPlotTheme
 #' @details TODO important
 #' @export
-plotSCRCWaves.Comparison <-
+plotFRC.Comparison <-
   function(
     model,
     data,
@@ -31,9 +31,9 @@ plotSCRCWaves.Comparison <-
     ...
   ){
     if(is.null(model)){
-      stop("model must be an object of class SCRCModel")
-    } else if(class(model) != "SCRCModel"){
-      stop("model must be an object of class SCRCModel")
+      stop("model must be an object of class FRAModel")
+    } else if(class(model) != "FRAModel"){
+      stop("model must be an object of class FRAModel")
     }
 
     if(!exists(x = "data")){

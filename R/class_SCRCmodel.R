@@ -1,4 +1,4 @@
-#' Constructor of SCRCModel S3 object
+#' Constructor of FRAModel S3 object
 #'
 #' @param data A data.frame or data.table object in a wide format that describe
 #'  response (might be multidimmensional) of the samples to the signal
@@ -16,8 +16,8 @@
 #' @param sample character (optional), specify name of the column that consists identifiaction of
 #' sample
 #'
-#' @return SCRCModel S3 object with
-new_SCRCModel <-
+#' @return FRAModel S3 object with
+new_FRAModel <-
   function(
     data,
     signal,
@@ -68,7 +68,7 @@ new_SCRCModel <-
            response = response,
            sample = sample
       )
-    class(model) <- "SCRCModel"
+    class(model) <- "FRAModel"
     return(model)
   }
 

@@ -21,7 +21,7 @@
 #' @param bootstrap.number \code{default = 1}
 #' @param bootstrap.sample_size \code{default = NULL}
 #'
-#' @return ITRC S3 object with
+#' @return FRA S3 object with
 #'
 #' @export
 RC <-

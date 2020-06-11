@@ -1,11 +1,12 @@
 ---
-title: "**Single Cell Response Curve (SCRC) - R package**"
+title: "**Fractional response analysis - R package**"
 subtitle: "**User Manual**"
 author: 
 - K. Nienałtowski^[author and maintainer, please contact via karol.nienaltowski a t gmail.com], R.E. Rigby, J.Walczak, K.Zakrzewska, J.Rehwinkel, M. Komorowski
 date: "`r format(Sys.time(), '%d %B %Y')`"
 abstract:
-  # The package SCRC is designed to estimate channel capacity between finite state input and multidimensional continuous output from experimental data. For efficient computations, it uses an iterative algorithm based on logistic regression. In addition, functions to estimate mutual information and calculate probabilities of correct discrimination between a pair of input values are implemented. The method is published in PLOS Computational Biology [@jetka2019].
+  R- package FRA is designed to performs fractional response analysi of single-cell responses as presented in the manuscript Nienałtowski et al. "Fractional response analysis reveals logarithmic cytokine responses in cellular populations" submitted (2020). A comprehensive documentation is available in directory XXXXXXXX.pdf.
+  # The package FRA is designed to estimate channel capacity between finite state input and multidimensional continuous output from experimental data. For efficient computations, it uses an iterative algorithm based on logistic regression. In addition, functions to estimate mutual information and calculate probabilities of correct discrimination between a pair of input values are implemented. The method is published in PLOS Computational Biology [@jetka2019].
 #output: html_vignette
 output:
   pdf_document:
@@ -88,7 +89,7 @@ Are required packages not found, they will be installed automatically.
 
 All problems, issues and bugs can be reported here:
 
-> [https://github.com/sysbiosig/SCRC/issues](https://github.com/sysbiosig/SCRC/issues)
+> [https://github.com/sysbiosig/FRA/issues](https://github.com/sysbiosig/FRA/issues)
 
 or directly via e-mail: karol.nienaltowski a t gmail.com.
 
@@ -135,7 +136,7 @@ Morevoer, package contains examplary datasets, that were used in the publication
 
 # Input data
 
-The function `SCRC()` takes `data` in the form of the object `data.frame` with a specifc structure of rows and columns. 
+The function `FRA()` takes `data` in the form of the object `data.frame` with a specifc structure of rows and columns. 
 Responses $y^i_j$ are assumed to be measured for a finite set of stimuli levels $x_1,x_2,\ldots,x_m$. The responses $y^i_j$ can be multidimensional. Usually, experimental dataset is represented as a table with rows and columns organized as shown in Figure 1.
 
 ```{r data_pdf3, fig.cap="Standard output graph presenting probabilities of correct discrimination between each pair of input values.", ,echo=FALSE, fig.pos="h",out.height="9cm"}
@@ -152,12 +153,12 @@ knitr::include_graphics("table_data.pdf")
 An example of the input `data.frame`, which contains the multivariate dose-responses to IFN-a2a in **monocytes CD14+ CD16-** presented in the **MP** is available within the package under the variable `SCRC::data.scrc.cytof`.  It has the following format
 
 ```{r init, include=FALSE}
-library(SCRC)
+library(FRA)
 display_plots=TRUE
 ```
 
 ```{r nfkb2, results="asis",echo=FALSE}
-knitr::kable(head(SCRC::data.itrc.cytof))
+knitr::kable(head(FRA::data.itrc.cytof))
 ```
 
 where each row represents measurements of a single-cell, the column named `Stim` specifies the dose level of IFN-a2a, while `pSTAT1`, `pSTAT3`, `pSTAT4`,`pSTAT5`,`pSTAT6`  are the normalized levels of phosporylated STATs in an individual cell. The above table can be shown in R by calling
@@ -165,10 +166,10 @@ where each row represents measurements of a single-cell, the column named `Stim`
 head(SCRC::data.scrc.cytof)
 ```
 
-# Esitmation of the SCRC
+# Esitmation of the FRA
 Then, main function is called as:
 ```c
-model <-  SCRC::SCRC(
+model <-  FRA::SCRC(
   data = data,
   signal = "input",
   response = c("output_1", "output_2", "output_3", ...),

@@ -1,34 +1,33 @@
-#' plotSCRCWaves
+#' plotHeterogeneityPieCharts
 #'
-#' @description This functions return ggplot2 figure that visualise Information
-#'  Theoretic Response Curves and specificity of cellular response to particular signals.
+#' @description This functions return ggplot2 figure that visualise using pie charts what fraction of cells
+#'  exposed to one dose exhibits responses in the range characteristic for other doses.
 #'
-#' @param model SCRCModel object return by SCRC function
-#' @param confusion.signal signal for which you want to plot confusion matrix, default \code{confusion.signal == max(signal)}
-#' @param title_ character, specify title of plot, default \code{"Information Theoretic Response Curve"}
-#' @param xlab_ character, label of x axes, default \code{"States number"}
-#' @param ylab_ character, label of y axes and legend title, default \code{"Signal levels"}
-#' @details TODO important
+#' @param model FRAModel object return by FRA function
+#' @param title_ character, specify title of plot, default \code{"Cell-to-cel heterogeneity"}
+#' @param xlab_ character, label of x axes, default \code{"dose for which response is typical"}
+#' @param ylab_ character, label of y axes, default \code{"dose"}
+#' @param max.signal maximal signal for which the cell-to-cell heterogeneity is plotted, default \code{confusion.signal == max(signal)}
 #' @export
-plotCofusionMatrix <-
+plotHeterogeneityPieCharts <-
   function(
     model,
-    confusion.signal = NULL,
+    max.signal = NULL,
     save.plot = FALSE,
-    title_ = "",
-    ylab_ ="Specific Stimulation Level",
-    xlab_ = "Stimulation Level",
+    title_ = "Cell-to-cel heterogeneity",
+    ylab_ ="dose",
+    xlab_ = "dose for which response is typical",
     ...
   ){
-
+    confusion.signal = 
     if(is.null(model)){
-      stop("model must be an object of class SCRCModel")
-    } else if(class(model) != "SCRCModel"){
-      stop("model must be an object of class SCRCModel")
+      stop("model must be an object of class FRAModel")
+    } else if(class(model) != "FRAModel"){
+      stop("model must be an object of class FRAModel")
     }
 
     if(is.null(model$confusion.table)){
-      stop("model must be an object of class SCRCModel and should contain confusion.table")
+      stop("model must be an object of class FRAModel and should contain confusion.table")
     }
 
     x_ = "1"

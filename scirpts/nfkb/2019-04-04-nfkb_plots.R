@@ -1,13 +1,13 @@
 ### ###
 ### 2019-04-04 manuscript
 ### ###
-library(ITRC)
+library(SCRC)
 library(future)
 
 
 #### initiaialisation ####
 force.run <- TRUE
-output.path <- "/media/knt/sdb2/KN/ITRC/resources/nfkb/2019-04-12/"
+output.path <- "../resources/nfkb/2019-04-12/"
 dir.create(path = output.path,
            recursive = TRUE)
 
@@ -174,3 +174,48 @@ ggplot2::ggsave(
   height = 6,
   useDingbats = FALSE
   )
+
+#### #####
+panel_tc <-
+  data.frame(
+    signal =c(0,0.01,0.03,0.1, 0.2, 0.5, 1, 2, 4, 10, 100),
+    panel_row= c(1, 2, 3 , 4,  5,  6,  1,  2, 3, 4, 5),
+    panel_col = c(1, 1, 1 , 1,  1,  1,  2,  2, 2, 2, 2)
+  )
+
+cm <- ITRC::plotCofusionMatrix(model = model.ts)
+model.ts$data %>% tidyr::gather(colnames(model.ts$data)[-c(1,2)], key = "time", value = "response")  %>%
+  dplyr::mutate(time = as.numeric(time)) %>%
+  dplyr::left_join(panel_tc, by = "signal") ->
+  data_tc
+
+
+library(SCRC)
+  
+  library(ggplot2)
+  
+  library(tidyverse)
+
+  g_traj <- ggplot(data_tc,
+          aes(x = as.numeric(time), y = response, group = sample)) +
+    geom_line(alpha = 0.01, size = 0.025) +
+    facet_grid(panel_row ~ panel_col) + 
+    SCRC::theme_scrc() +
+    coord_cartesian(ylim = c(0,10))
+
+  ggplot2::ggsave(
+    filename = paste(output.path, "nfkb_cm.pdf", sep = "/"),
+    plot = cm,
+    width = 8,
+    height = 8,
+    useDingbats = FALSE
+  )
+  
+  ggplot2::ggsave(
+    filename = paste(output.path, "nfkb_traj.pdf", sep = "/"),
+    plot = g_traj,
+    width = 12,
+    height = 8,
+    useDingbats = FALSE
+  )
+  

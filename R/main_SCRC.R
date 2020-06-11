@@ -1,6 +1,6 @@
-#' Compute Information-Theoretic Response Curve
+#'FRA
 #'
-#' @description  This function calculate Information Theroetic Response Curves.
+#' @description  This function performs Fractional Response analysis, which quantifies changes in fractions of cells with given response levels.
 #'
 #' @param data A data.frame or data.table object in a wide format that describe
 #'  response (might be multidimmensional) of the samples to the signal
@@ -21,10 +21,10 @@
 #' @param bootstrap.number \code{default = 1}
 #' @param bootstrap.sample_size \code{default = NULL}
 #'
-#' @return SCRC S3 object with
+#' @return FRA S3 object with
 #'
 #' @export
-SCRC <-
+FRA <-
   function(
     data,
     signal = "signal",
